@@ -92,13 +92,13 @@ for i in range(tamanhoPopulacao):
     x = [populacao[i][0], populacao[i][1], populacao[i][2], probabilidadeSelecao]
     populacao[i] = x
 
-# ordenando pelo mais tem probabilidade de sair
+# ordenando pelos que tem  mais probabilidade de sair
 populacao.sort(key=sortProbabilidadeSelecao, reverse=True)
 print(populacao)
 
 tamanhoPopulacao = len(populacao)
 pais = list()
-qtdPais = ( round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2) ) * 2 # total de Casais que vao se formar com a população atual
+qtdPais = (round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2)) * 2 # total de Casais que vao se formar com a população atual
 
 for c in range(qtdPais): # seleção do pais
     roleta = random.randint(1, 100)
@@ -117,9 +117,25 @@ for c in range(qtdPais): # seleção do pais
 
 print(pais)
 
-# for g in range(1,numeroDeGeracoes):
+#crossOver se terá, se sim de qual gen vai trocar
+
+#mutacao para todos os novos individuos, sim de qual gen vai trocar
+
+#analisar a nova populacao
+
+#juntar a populacao, ordenar pelo fitness menor para o maior e tirar os 2 ultimos com maior fitness
+
+# for g in range(numeroDeGeracoes):
 
 '''
+1) Encontrar valor de x para o qual a função f(x) = x2 - 3x + 4 assume o valor mínimo
+- Assumir que x ∈ [-10, +10]
+- Codificar X como vetor binário
+- Criar uma população inicial com 4 indivíduos
+- Aplicar Mutação com taxa de 1%
+- Aplicar Crossover com taxa de 60%
+- Usar seleção por roleta.
+- Usar no máximo 5 gerações.
 
     print(fenotipo)
     print(converteFenotipoParaGenotipo(fenotipo))
