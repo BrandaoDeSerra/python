@@ -1,15 +1,17 @@
-
 import random
 from builtins import print, filter
 
+
 def probabilidade(aptidao, soma):
     resultado = round((aptidao / soma) * 100)
-    if(resultado == 0):
+    if (resultado == 0):
         resultado = 1
     return resultado
 
+
 def fitness(x):
-    return (x**2) - (3*x) + 4
+    return (x ** 2) - (3 * x) + 4
+
 
 def converteFenotipo2Genotipo(fenotipo):
     binario = bin(fenotipo)
@@ -19,23 +21,28 @@ def converteFenotipo2Genotipo(fenotipo):
         binario = binario[1:]
     return sinal + str(binario[2:].zfill(4))
 
+
 def converteGenotipo2Fenotipo(genotipo):
     sinal = '0b'
-    if(x[0:1] == '0'):
+    if (x[0:1] == '0'):
         sinal = '-0b'
-    return int(sinal+genotipo[1:],2)
+    return int(sinal + genotipo[1:], 2)
 
-def crossover(genotipo1,genotipo2, idxCross):
-    return genotipo1[:idxCross] + genotipo2[idxCross:]+';'+genotipo2[:idxCross] + genotipo1[idxCross:]
 
-def mutacao(genotipo,idxMut):
+def crossover(genotipo1, genotipo2, idxCross):
+    return genotipo1[:idxCross] + genotipo2[idxCross:] + ';' + genotipo2[:idxCross] + genotipo1[idxCross:]
+
+
+def mutacao(genotipo, idxMut):
     gene = '0'
-    if(genotipo[idxMut] == '0'):
+    if (genotipo[idxMut] == '0'):
         gene = '1'
-    return str(genotipo[:idxMut]) + str(gene) + str(genotipo[idxMut+1:])
+    return str(genotipo[:idxMut]) + str(gene) + str(genotipo[idxMut + 1:])
+
 
 def sortProbabilidadeSelecao(val):
     return val[3]
+
 
 '''
 x -> [-10, +10]
@@ -74,36 +81,43 @@ tamanhoPopulacao = len(populacao)
 for i in range(tamanhoPopulacao):
     aptidao = populacao[i][2]
     inversao = soma - aptidao
-    x = [populacao[i][0],populacao[i][1],populacao[i][2],inversao]
+    x = [populacao[i][0], populacao[i][1], populacao[i][2], inversao]
     somaInversao = somaInversao + inversao
     populacao[i] = x
 
 print(populacao)
 for i in range(tamanhoPopulacao):
     aptidaoInversa = populacao[i][3]
-    probabilidadeSelecao = probabilidade(aptidaoInversa,somaInversao)
-    x = [populacao[i][0],populacao[i][1],populacao[i][2],probabilidadeSelecao]
+    probabilidadeSelecao = probabilidade(aptidaoInversa, somaInversao)
+    x = [populacao[i][0], populacao[i][1], populacao[i][2], probabilidadeSelecao]
     populacao[i] = x
 
-casais = list()
-totalCasais = round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2) #total de Casais que vao se formar com a população atual
-
-#ordenando pelo mais tem probabilidade de sair
-populacao.sort(key = sortProbabilidadeSelecao,reverse = True)
+# ordenando pelo mais tem probabilidade de sair
+populacao.sort(key=sortProbabilidadeSelecao, reverse=True)
 print(populacao)
 
-for c in range(tamanhoPopulacao):
+tamanhoPopulacao = len(populacao)
+pais = list()
+qtdPais = ( round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2) ) * 2 # total de Casais que vao se formar com a população atual
+
+for c in range(qtdPais): # seleção do pais
     roleta = random.randint(1, 100)
+    referenciaInicial = 0
+    achouApto = 0
     for p in range(tamanhoPopulacao):
         probabilidadeSelecaoIndividuo = populacao[p][3]
-      #  if( )
-       # if(probabilidadeSelecaoIndividuo)
+        referenciaFinal = referenciaInicial + probabilidadeSelecaoIndividuo
+        if (referenciaInicial + 1) <= roleta <= referenciaFinal:
+            pais.append(populacao[p][1])  # recupera o gene
+            achouPaiApto = 1
+            break
+        referenciaInicial = referenciaFinal
+    if achouPaiApto == 0: # caso exceção da distribuição dos 100%, vai para o que tem mais chances de seleção, o primeiro
+        pais.append(populacao[0][1])
 
+print(pais)
 
-
-
-
-#for g in range(1,numeroDeGeracoes):
+# for g in range(1,numeroDeGeracoes):
 
 '''
 
