@@ -1,7 +1,6 @@
 import random
 from builtins import print, filter
 
-
 def probabilidade(aptidao, soma):
     resultado = round((aptidao / soma) * 100)
     if (resultado == 0):
@@ -12,7 +11,6 @@ def probabilidade(aptidao, soma):
 def fitness(x):
     return (x ** 2) - (3 * x) + 4
 
-
 def converteFenotipo2Genotipo(fenotipo):
     binario = bin(fenotipo)
     sinal = '1'
@@ -21,17 +19,14 @@ def converteFenotipo2Genotipo(fenotipo):
         binario = binario[1:]
     return sinal + str(binario[2:].zfill(4))
 
-
 def converteGenotipo2Fenotipo(genotipo):
     sinal = '0b'
     if (x[0:1] == '0'):
         sinal = '-0b'
     return int(sinal + genotipo[1:], 2)
 
-
 def crossover(genotipo1, genotipo2, idxCross):
     return genotipo1[:idxCross] + genotipo2[idxCross:] + ';' + genotipo2[:idxCross] + genotipo1[idxCross:]
-
 
 def mutacao(genotipo, idxMut):
     gene = '0'
@@ -39,10 +34,8 @@ def mutacao(genotipo, idxMut):
         gene = '1'
     return str(genotipo[:idxMut]) + str(gene) + str(genotipo[idxMut + 1:])
 
-
 def sortProbabilidadeSelecao(val):
     return val[3]
-
 
 '''
 x -> [-10, +10]
