@@ -1,5 +1,5 @@
 import random
-from builtins import print, filter
+from builtins import print
 
 # ##################################################
 def probabilidade(aptidao, soma):
@@ -45,7 +45,7 @@ def gerarIndividuo(fenotipo,populacao):
     aptidao = fitness(fenotipo)
     x = [fenotipo, genotipo, aptidao]
     populacao.append(x)
-    return populacao
+
 # ##################################################
 def recuperarSomaInversao(populacao):
     soma = 0
@@ -74,7 +74,7 @@ def avaliarPopulacao(populacao):
         x = [populacao[i][0], populacao[i][1], populacao[i][2], probabilidadeSelecao]
         populacao[i] = x
     populacao.sort(key=ordenaProbabilidadeSelecao, reverse=True)
-    return populacao
+
 # ##################################################
 def selecao(pais,populacao):
     tamanhoPopulacao = len(populacao)
@@ -93,7 +93,7 @@ def selecao(pais,populacao):
             referenciaInicial = referenciaFinal
         if achouPaiApto == 0:  # caso exceção da distribuição dos 100%, vai para o que tem mais chances de seleção, o primeiro
             pais.append(populacao[0][1])
-    return pais
+
 # ##################################################
 def reproducao(pais,taxaCrossover):
     qtdCasal = int(len(pais) / 2)
@@ -111,7 +111,7 @@ def reproducao(pais,taxaCrossover):
         filhos.append(filho2)
         indx = indx + 2
     pais.clear()
-    return filhos
+
 # ##################################################
 def mutacao(filhos,taxaMutacao):
     indx = 0
@@ -122,7 +122,7 @@ def mutacao(filhos,taxaMutacao):
                 filho = mutation(filho, gen)  # Mutacao
         filhos[indx] = filho
         indx = indx + 1
-    return filhos
+
 # ##################################################
 def atualizarPopulacao(populacao, filhos):
     for f in filhos:
@@ -132,21 +132,21 @@ def atualizarPopulacao(populacao, filhos):
             fenotipo = -10
         elif fenotipo > 10:
             fenotipo = 10
-        populacao = gerarIndividuo(fenotipo, populacao)
+        gerarIndividuo(fenotipo, populacao)
     filhos.clear()
     populacao.sort(key=ordenaAptidao)
-    return populacao
+
 # ##################################################
 def eliminaIndividuosDuplicados(populacao):
     bkp = list()
-    f2x = -99999;
+    f2x = -99999
     for p in populacao:
         if p[2] != f2x:
             bkp.append(p)
             f2x = p[2]
-    bkp.sort(key=ordenaAptidao)
     populacao = bkp
-    return populacao
+    populacao.sort(key=ordenaAptidao)
+
 
 '''
 1) Encontrar valor de x para o qual a função f(x) = x2 - 3x + 4 assume o valor mínimo
@@ -173,8 +173,8 @@ individuo
   - probabilidadeSelecao
 '''
 populacao = list()
-pais = list();
-filhos = list();
+pais = list()
+filhos = list()
 
 populacaoInicial = 4
 taxaCrossover = 60
@@ -184,20 +184,17 @@ numeroDeGeracoes = 5
 # Gera populacao Inicial
 for p in range(populacaoInicial):
     fenotipo = random.randint(-10, 10)
-    populacao = gerarIndividuo(fenotipo,populacao)
+    gerarIndividuo(fenotipo,populacao)
 
 for geracao in range(numeroDeGeracoes):
-    pais.clear()
-    filhos.clear()
-    filhos = list();
-    populacao = avaliarPopulacao(populacao)
-    pais = selecao(pais,populacao)
-    filhos = reproducao(pais,taxaCrossover)
-    filhos = mutacao(filhos,taxaMutacao)
-    populacao = atualizarPopulacao(populacao,filhos)
-    #populacao = eliminaIndividuosDuplicados(populacao)
+    avaliarPopulacao(populacao)
+    selecao(pais,populacao)
+    reproducao(pais,taxaCrossover)
+    mutacao(filhos,taxaMutacao)
+    atualizarPopulacao(populacao,filhos)
+    # eliminaIndividuosDuplicados(populacao)
 
 # listar populacao
 for individuo in populacao:
-    print('x = '+str(individuo[0])+' >> f(x) = '+str(individuo[2]))
+    print('x='+str(individuo[0])+' >> f(x)='+str(individuo[2]))
 
