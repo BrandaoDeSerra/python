@@ -146,7 +146,7 @@ def eliminaIndividuosDuplicados(populacao):
             f2x = p[2]
     populacao = bkp
     populacao.sort(key=ordenaAptidao)
-
+    return populacao
 
 '''
 1) Encontrar valor de x para o qual a função f(x) = x2 - 3x + 4 assume o valor mínimo
@@ -192,7 +192,7 @@ for geracao in range(numeroDeGeracoes):
     reproducao(pais,taxaCrossover)
     mutacao(filhos,taxaMutacao)
     atualizarPopulacao(populacao,filhos)
-    # eliminaIndividuosDuplicados(populacao)
+    # populacao = eliminaIndividuosDuplicados(populacao)
 
 # listar populacao
 for individuo in populacao:
