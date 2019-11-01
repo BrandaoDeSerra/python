@@ -1,12 +1,23 @@
 import random
 from builtins import print, filter
 
+
+def excluirIndividuosIguais(populacao):
+    bkp = list()
+    fDeX = -99999;
+    for p in populacao:
+        if p[2] != fDeX:
+            bkp.append(p)
+            fDeX = p[2]
+    bkp.sort(key=sortAptidao)
+    populacao = bkp
+    return populacao
+
 def probabilidade(aptidao, soma):
     resultado = round((aptidao / soma) * 100)
     if (resultado == 0):
         resultado = 1
     return resultado
-
 
 def fitness(x):
     return (x ** 2) - (3 * x) + 4
@@ -21,7 +32,7 @@ def converteFenotipo2Genotipo(fenotipo):
 
 def converteGenotipo2Fenotipo(genotipo):
     sinal = '0b'
-    if (x[0:1] == '0'):
+    if (genotipo[0:1] == '0'):
         sinal = '-0b'
     return int(sinal + genotipo[1:], 2)
 
@@ -37,9 +48,103 @@ def mutacao(genotipo, idxMut):
 def sortProbabilidadeSelecao(val):
     return val[3]
 
+def sortAptidao(val):
+    return val[2]
+
+def geraIndividuo(fenotipo,populacao):
+    genotipo = converteFenotipo2Genotipo(fenotipo)
+    aptidao = fitness(fenotipo)
+    x = [fenotipo, genotipo, aptidao]
+    populacao.append(x)
+    return populacao
+
+def recuperaSomaInversao(populacao):
+    soma = 0
+    for p in populacao:
+        soma = soma + p[3]
+    return soma
+
+def recuperaSomaAptidao(populacao):
+    soma = 0
+    for p in populacao:
+        soma = soma + p[2]
+    return soma
+
+def avaliaPopulacao(populacao):
+    soma = recuperaSomaAptidao(populacao)
+    tamanhoPopulacao = len(populacao)
+    for i in range(tamanhoPopulacao):
+        aptidao = populacao[i][2]
+        inversao = soma - aptidao
+        x = [populacao[i][0], populacao[i][1], populacao[i][2], inversao]
+        populacao[i] = x
+
+    somaInversao = recuperaSomaInversao(populacao)
+    for i in range(tamanhoPopulacao):
+        aptidaoInversa = populacao[i][3]
+        probabilidadeSelecao = probabilidade(aptidaoInversa, somaInversao)
+        x = [populacao[i][0], populacao[i][1], populacao[i][2], probabilidadeSelecao]
+        populacao[i] = x
+
+    populacao.sort(key=sortProbabilidadeSelecao, reverse=True)
+    return populacao
+
+def geraNovaPopulacao(populacao,taxaCrossover,taxaMutacao):
+    pais = list()
+    filhos = list()
+    tamanhoPopulacao = len(populacao)
+    qtdPais = (round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2)) * 2  # total de Casais que vao se formar com a população atual
+    for c in range(qtdPais):  # seleção do pais
+        roleta = random.randint(1, 100)
+        referenciaInicial = 0
+        achouPaiApto = 0
+        for p in range(tamanhoPopulacao):
+            probabilidadeSelecaoIndividuo = populacao[p][3]
+            referenciaFinal = referenciaInicial + probabilidadeSelecaoIndividuo
+            if (referenciaInicial + 1) <= roleta <= referenciaFinal:
+                pais.append(populacao[p][1])  # recupera o gene
+                achouPaiApto = 1
+                break
+            referenciaInicial = referenciaFinal
+        if achouPaiApto == 0:  # caso exceção da distribuição dos 100%, vai para o que tem mais chances de seleção, o primeiro
+            pais.append(populacao[0][1])
+
+    qtdCasal = int(len(pais) / 2)
+    indx = 0
+    for p in range(qtdCasal):
+        filho1 = pais[indx]
+        filho2 = pais[indx + 1]
+        probabilidadeCross = random.randint(1, 100)
+        if probabilidadeCross <= taxaCrossover:
+            genCrossover = random.randint(0, 4)
+            filhosCross = str(crossover(filho1, filho2, genCrossover)).split(';') # Crossover
+            filho1 = filhosCross[0]
+            filho2 = filhosCross[1]
+        isFilho = 0;
+        for filho in [filho1, filho2]:
+            for gen in range(len(filho)):
+                probabilidadeMutacao = random.randint(1, 100)
+                if probabilidadeMutacao <= taxaMutacao:
+                    filho = mutacao(filho, gen) # Mutacao
+            if isFilho == 0:
+                filho1 = filho
+                isFilho = 1
+            else:
+                filho2 = filho
+        filhos.append(filho1)
+        filhos.append(filho2)
+        indx = indx + 2
+    return filhos
+
+def atualizaPopulacao(populacao, filhos):
+    for f in filhos:
+        fenotipo = converteGenotipo2Fenotipo(f)
+        populacao = geraIndividuo(fenotipo, populacao)
+    populacao.sort(key=sortAptidao)
+    return populacao
 '''
 x -> [-10, +10]
-Populacao = 4
+Populacao Inicial = 4
 Taxa de Crossover = 60% 
 Taxa de Mutação = 1%  
 Probabilidade de Escolha P(i) = SOMATORIO f(i) - f(i) / SOMATORIO (SOMATORIO f(i) - f(i) ))
@@ -52,71 +157,31 @@ individuo
   - Aptidão
   - probabilidadeSelecao
 '''
+populacao = list()
+pais = list()
+filhos = list()
 
-rangePopulacao = 4
+populacaoInicial = 4
 taxaCrossover = 60
 taxaMutacao = 1
 numeroDeGeracoes = 5
 
-populacao = list()
-soma = 0
-
-for p in range(rangePopulacao):
+for p in range(populacaoInicial):
     fenotipo = random.randint(-10, 10)
-    genotipo = converteFenotipo2Genotipo(fenotipo)
-    aptidao = fitness(fenotipo)
-    x = [fenotipo, genotipo, aptidao]
-    populacao.append(x)
-    soma = soma + aptidao
+    populacao = geraIndividuo(fenotipo,populacao)
 
-somaInversao = 0
-tamanhoPopulacao = len(populacao)
-for i in range(tamanhoPopulacao):
-    aptidao = populacao[i][2]
-    inversao = soma - aptidao
-    x = [populacao[i][0], populacao[i][1], populacao[i][2], inversao]
-    somaInversao = somaInversao + inversao
-    populacao[i] = x
+for geracao in range(numeroDeGeracoes):
+    populacao = avaliaPopulacao(populacao)
+    # pais = selecao(populacao)
+    # filhos = reproducao(populacao,taxaCrossover)
+    # filhos = mutacao(populacao,taxaMutacao)
+    filhos = geraNovaPopulacao(populacao,taxaCrossover,taxaMutacao)
+    populacao = atualizaPopulacao(populacao,filhos)
 
 print(populacao)
-for i in range(tamanhoPopulacao):
-    aptidaoInversa = populacao[i][3]
-    probabilidadeSelecao = probabilidade(aptidaoInversa, somaInversao)
-    x = [populacao[i][0], populacao[i][1], populacao[i][2], probabilidadeSelecao]
-    populacao[i] = x
 
-# ordenando pelos que tem  mais probabilidade de sair
-populacao.sort(key=sortProbabilidadeSelecao, reverse=True)
-print(populacao)
-
-tamanhoPopulacao = len(populacao)
-pais = list()
-qtdPais = (round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2)) * 2 # total de Casais que vao se formar com a população atual
-
-for c in range(qtdPais): # seleção do pais
-    roleta = random.randint(1, 100)
-    referenciaInicial = 0
-    achouApto = 0
-    for p in range(tamanhoPopulacao):
-        probabilidadeSelecaoIndividuo = populacao[p][3]
-        referenciaFinal = referenciaInicial + probabilidadeSelecaoIndividuo
-        if (referenciaInicial + 1) <= roleta <= referenciaFinal:
-            pais.append(populacao[p][1])  # recupera o gene
-            achouPaiApto = 1
-            break
-        referenciaInicial = referenciaFinal
-    if achouPaiApto == 0: # caso exceção da distribuição dos 100%, vai para o que tem mais chances de seleção, o primeiro
-        pais.append(populacao[0][1])
-
-print(pais)
-
-#crossOver se terá, se sim de qual gen vai trocar
-
-#mutacao para todos os novos individuos, sim de qual gen vai trocar
-
-#analisar a nova populacao
-
-#juntar a populacao, ordenar pelo fitness menor para o maior e tirar os 2 ultimos com maior fitness
+# populacao = excluirIndividuosIguais(populacao)
+# print(populacao)
 
 # for g in range(numeroDeGeracoes):
 
