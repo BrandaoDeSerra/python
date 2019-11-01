@@ -2,13 +2,13 @@ import random
 from builtins import print, filter
 
 
-def excluirIndividuosIguais(populacao):
+def eliminacao(populacao):
     bkp = list()
-    fDeX = -99999;
+    f2x = -99999;
     for p in populacao:
-        if p[2] != fDeX:
+        if p[2] != f2x:
             bkp.append(p)
-            fDeX = p[2]
+            f2x = p[2]
     bkp.sort(key=sortAptidao)
     populacao = bkp
     return populacao
@@ -39,7 +39,7 @@ def converteGenotipo2Fenotipo(genotipo):
 def crossover(genotipo1, genotipo2, idxCross):
     return genotipo1[:idxCross] + genotipo2[idxCross:] + ';' + genotipo2[:idxCross] + genotipo1[idxCross:]
 
-def mutacao(genotipo, idxMut):
+def mutation(genotipo, idxMut):
     gene = '0'
     if (genotipo[idxMut] == '0'):
         gene = '1'
@@ -88,6 +88,64 @@ def avaliaPopulacao(populacao):
 
     populacao.sort(key=sortProbabilidadeSelecao, reverse=True)
     return populacao
+
+def selecao(pais,populacao):
+    tamanhoPopulacao = len(populacao)
+    qtdPais = (round(tamanhoPopulacao / 2) - (tamanhoPopulacao % 2)) * 2  # total de Casais que vao se formar com a população atual
+    for c in range(qtdPais):  # seleção do pais
+        roleta = random.randint(1, 100)
+        referenciaInicial = 0
+        achouPaiApto = 0
+        for p in range(tamanhoPopulacao):
+            probabilidadeSelecaoIndividuo = populacao[p][3]
+            referenciaFinal = referenciaInicial + probabilidadeSelecaoIndividuo
+            if (referenciaInicial + 1) <= roleta <= referenciaFinal:
+                pais.append(populacao[p][1])  # recupera o gene
+                achouPaiApto = 1
+                break
+            referenciaInicial = referenciaFinal
+        if achouPaiApto == 0:  # caso exceção da distribuição dos 100%, vai para o que tem mais chances de seleção, o primeiro
+            pais.append(populacao[0][1])
+    return pais
+
+def reproducao(pais,taxaCrossover):
+    qtdCasal = int(len(pais) / 2)
+    indx = 0
+    for p in range(qtdCasal):
+        filho1 = pais[indx]
+        filho2 = pais[indx + 1]
+        probabilidadeCross = random.randint(1, 100)
+        if probabilidadeCross <= taxaCrossover:
+            genCrossover = random.randint(0, 4)
+            filhosCross = str(crossover(filho1, filho2, genCrossover)).split(';')  # Crossover
+            filho1 = filhosCross[0]
+            filho2 = filhosCross[1]
+        filhos.append(filho1)
+        filhos.append(filho2)
+        indx = indx + 2
+    return filhos
+
+def mutacao(filhos,taxaMutacao):
+    qtdParFilhos = int(len(filhos) / 2)
+    indx = 0
+    for i in range(qtdParFilhos):
+        filho1 = filhos[indx]
+        filho2 = filhos[indx + 1]
+        isFilho = 0
+        for cria in [filho1, filho2]:
+            for gen in range(len(cria)):
+                probabilidadeMutacao = random.randint(1, 100)
+                if probabilidadeMutacao <= taxaMutacao:
+                    cria = mutation(cria, gen)  # Mutacao
+            if isFilho == 0:
+                filho1 = cria
+                isFilho = 1
+            else:
+                filho2 = cria
+        filhos[indx] = filho1
+        filhos[indx + 1] = filho2
+        indx = indx + 2
+    return filhos
 
 def geraNovaPopulacao(populacao,taxaCrossover,taxaMutacao):
     pais = list()
@@ -164,7 +222,7 @@ filhos = list()
 populacaoInicial = 4
 taxaCrossover = 60
 taxaMutacao = 1
-numeroDeGeracoes = 5
+numeroDeGeracoes = 1000
 
 for p in range(populacaoInicial):
     fenotipo = random.randint(-10, 10)
@@ -172,16 +230,14 @@ for p in range(populacaoInicial):
 
 for geracao in range(numeroDeGeracoes):
     populacao = avaliaPopulacao(populacao)
-    # pais = selecao(populacao)
-    # filhos = reproducao(populacao,taxaCrossover)
-    # filhos = mutacao(populacao,taxaMutacao)
-    filhos = geraNovaPopulacao(populacao,taxaCrossover,taxaMutacao)
+    pais = selecao(pais,populacao)
+    filhos = reproducao(pais,taxaCrossover)
+    filhos = mutacao(filhos,taxaMutacao)
     populacao = atualizaPopulacao(populacao,filhos)
+    populacao = eliminacao(populacao)
 
 print(populacao)
 
-# populacao = excluirIndividuosIguais(populacao)
-# print(populacao)
 
 # for g in range(numeroDeGeracoes):
 
