@@ -110,6 +110,7 @@ def reproducao(pais,taxaCrossover):
         filhos.append(filho1)
         filhos.append(filho2)
         indx = indx + 2
+    pais.clear()
     return filhos
 # ##################################################
 def mutacao(filhos,taxaMutacao):
@@ -132,7 +133,19 @@ def atualizarPopulacao(populacao, filhos):
         elif fenotipo > 10:
             fenotipo = 10
         populacao = gerarIndividuo(fenotipo, populacao)
+    filhos.clear()
     populacao.sort(key=ordenaAptidao)
+    return populacao
+# ##################################################
+def eliminaIndividuosDuplicados(populacao):
+    bkp = list()
+    f2x = -99999;
+    for p in populacao:
+        if p[2] != f2x:
+            bkp.append(p)
+            f2x = p[2]
+    bkp.sort(key=ordenaAptidao)
+    populacao = bkp
     return populacao
 
 '''
@@ -160,24 +173,29 @@ individuo
   - probabilidadeSelecao
 '''
 populacao = list()
-pais = list()
-filhos = list()
+pais = list();
+filhos = list();
 
 populacaoInicial = 4
 taxaCrossover = 60
 taxaMutacao = 1
-numeroDeGeracoes = 1
+numeroDeGeracoes = 5
 
+# Gera populacao Inicial
 for p in range(populacaoInicial):
     fenotipo = random.randint(-10, 10)
     populacao = gerarIndividuo(fenotipo,populacao)
 
 for geracao in range(numeroDeGeracoes):
+    pais.clear()
+    filhos.clear()
+    filhos = list();
     populacao = avaliarPopulacao(populacao)
     pais = selecao(pais,populacao)
     filhos = reproducao(pais,taxaCrossover)
     filhos = mutacao(filhos,taxaMutacao)
     populacao = atualizarPopulacao(populacao,filhos)
+    #populacao = eliminaIndividuosDuplicados(populacao)
 
 # listar populacao
 for individuo in populacao:
