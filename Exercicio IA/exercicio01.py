@@ -190,7 +190,7 @@ Individuo
 populacao = list()
 pais = list()
 filhos = list()
-ordem = 0
+
 populacaoInicial = 4
 taxaCrossover = 60
 taxaMutacao = 1

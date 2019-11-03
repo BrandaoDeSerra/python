@@ -219,7 +219,7 @@ cidades = [1,2,3,4]
 populacao = list()
 pais = list()
 filhos = list()
-ordem = 0
+
 taxaCrossover = 60
 taxaMutacao = 1
 numeroDeGeracoes = 15
