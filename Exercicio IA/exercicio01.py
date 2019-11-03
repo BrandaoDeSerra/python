@@ -157,7 +157,8 @@ def eliminaIndividuosDuplicados(populacao):
         if p[3] != f2x:
             bkp.append(p)
             f2x = p[3]
-    populacao = bkp
+    if len(bkp) >= 4:
+        populacao = bkp
     populacao.sort(key=ordenaAptidao)
     return populacao
 
@@ -180,11 +181,11 @@ Probabilidade de Escolha P(i) = SOMATORIO f(i) - f(i) / SOMATORIO (SOMATORIO f(i
 1 bit(sinal) + 4 bits(valor 15 a -15 ) = 5 bits
 
 Individuo
-  - Ordem
-  - Fenotipo
-  - Genotipo
-  - Aptidão
-  - probabilidadeSelecao
+  -0 Ordem
+  -1 Fenotipo
+  -2 Genotipo
+  -3 Aptidão
+  -4 probabilidadeSelecao
 '''
 populacao = list()
 pais = list()
