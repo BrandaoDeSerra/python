@@ -209,17 +209,15 @@ for geracao in range(numeroDeGeracoes):
     atualizarPopulacao(populacao,filhos)
     #populacao = eliminaIndividuosDuplicados(populacao)
 
-# listar populacao
-for individuo in populacao:
-    print('ordem:'+str(individuo[0])+' | x='+str(individuo[1])+' >> f(x)='+str(individuo[3]))
-
-
 y = list()
 x = list()
-
 for i in range(len(populacao)):
    y.append(populacao[i][3])
    x.append(populacao[i][1])
 
 plt.plot(x,y)
 plt.show()
+
+# listar populacao
+for individuo in populacao:
+    print('ordem:'+str(individuo[0])+' | x='+str(individuo[1])+' >> f(x)='+str(individuo[3]))

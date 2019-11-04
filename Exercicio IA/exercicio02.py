@@ -118,7 +118,6 @@ def ordenaPopulacao(val):
 def ordenaFenotipo(val):
     return val[1]
 
-
 # ##################################################
 def selecao(pais,populacao):
     tamanhoPopulacao = len(populacao)
@@ -147,7 +146,7 @@ def reproducao(pais,taxaCrossover):
         filho2 = pais[indx + 1]
         probabilidadeCross = random.randint(1, 100)
         if probabilidadeCross <= taxaCrossover:
-            genCrossover = random.randint(2, 3)
+            genCrossover = random.randint(2, 3) # random.randint(0, 3) (0 e 1 não ococorre crossover fica igual)
             filho1,filho2 = crossover(filho1, filho2, genCrossover)  # Crossover
         filhos.append(filho1)
         filhos.append(filho2)
@@ -214,7 +213,6 @@ Individuo
   -4 probabilidadeSelecao
   
 '''
-
 cidades = [1,2,3,4]
 populacao = list()
 pais = list()
@@ -240,7 +238,6 @@ x = list()
 for i in range(len(populacao)):
    y.append(populacao[i][3])
    x.append(populacao[i][1])
-
 plt.plot(x,y)
 plt.show()
 
