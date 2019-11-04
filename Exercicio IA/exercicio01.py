@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import random
 from builtins import print
 
@@ -7,9 +8,11 @@ def probabilidade(aptidao, soma):
     if (resultado == 0):
         resultado = 1
     return resultado
+
 # ##################################################
 def fitness(x):
     return x**2 - 3*x + 4
+
 # ##################################################
 def converterFenotipo2Genotipo(fenotipo):
     binario = bin(fenotipo)
@@ -18,60 +21,72 @@ def converterFenotipo2Genotipo(fenotipo):
         sinal = '0'
         binario = binario[1:]
     return sinal + str(binario[2:].zfill(4))
+
 # ##################################################
 def converterGenotipo2Fenotipo(genotipo):
     sinal = '0b'
     if (genotipo[0:1] == '0'):
         sinal = '-0b'
     return int(sinal + genotipo[1:], 2)
+
 # ##################################################
 def crossover(genotipo1, genotipo2, idxCross):
-    return genotipo1[:idxCross] + genotipo2[idxCross:] + ';' + genotipo2[:idxCross] + genotipo1[idxCross:]
+    return genotipo1[:idxCross] + genotipo2[idxCross:],genotipo2[:idxCross] + genotipo1[idxCross:]
+
 # ##################################################
 def mutation(genotipo, idxMut):
     gene = '0'
     if (genotipo[idxMut] == '0'):
         gene = '1'
     return str(genotipo[:idxMut]) + str(gene) + str(genotipo[idxMut + 1:])
+
 # ##################################################
 def ordenaProbabilidadeSelecao(val):
-    return val[3]
+    return val[4]
+
 # ##################################################
 def ordenaAptidao(val):
-    return val[2]
+    return val[3]
+
+# ##################################################
+def ordenaPopulacao(val):
+    return val[0]
+
 # ##################################################
 def gerarIndividuo(fenotipo,populacao):
     genotipo = converterFenotipo2Genotipo(fenotipo)
     aptidao = fitness(fenotipo)
-    x = [fenotipo, genotipo, aptidao]
+    x = [len(populacao)+1, fenotipo, genotipo, aptidao]
     populacao.append(x)
 
 # ##################################################
 def recuperarSomaInversao(populacao):
     soma = 0
     for p in populacao:
-        soma = soma + p[3]
+        soma = soma + p[4]
     return soma
+
 # ##################################################
 def recuperarSomaAptidao(populacao):
     soma = 0
     for p in populacao:
-        soma = soma + p[2]
+        soma = soma + p[3]
     return soma
+
 # ##################################################
 def avaliarPopulacao(populacao):
     soma = recuperarSomaAptidao(populacao)
     tamanhoPopulacao = len(populacao)
     for i in range(tamanhoPopulacao):
-        aptidao = populacao[i][2]
+        aptidao = populacao[i][3]
         inversao = soma - aptidao
-        x = [populacao[i][0], populacao[i][1], populacao[i][2], inversao]
+        x = [populacao[i][0],populacao[i][1], populacao[i][2], populacao[i][3], inversao]
         populacao[i] = x
     somaInversao = recuperarSomaInversao(populacao)
     for i in range(tamanhoPopulacao):
-        aptidaoInversa = populacao[i][3]
+        aptidaoInversa = populacao[i][4]
         probabilidadeSelecao = probabilidade(aptidaoInversa, somaInversao)
-        x = [populacao[i][0], populacao[i][1], populacao[i][2], probabilidadeSelecao]
+        x = [populacao[i][0], populacao[i][1], populacao[i][2], populacao[i][3], probabilidadeSelecao]
         populacao[i] = x
     populacao.sort(key=ordenaProbabilidadeSelecao, reverse=True)
 
@@ -84,15 +99,15 @@ def selecao(pais,populacao):
         referenciaInicial = 0
         achouPaiApto = 0
         for p in range(tamanhoPopulacao):
-            probabilidadeSelecaoIndividuo = populacao[p][3]
+            probabilidadeSelecaoIndividuo = populacao[p][4]
             referenciaFinal = referenciaInicial + probabilidadeSelecaoIndividuo
             if (referenciaInicial + 1) <= roleta <= referenciaFinal:
-                pais.append(populacao[p][1])  # recupera o gene
+                pais.append(populacao[p][2])  # recupera o gene
                 achouPaiApto = 1
                 break
             referenciaInicial = referenciaFinal
         if achouPaiApto == 0:  # caso exceção da distribuição dos 100%, vai para o que tem mais chances de seleção, o primeiro
-            pais.append(populacao[0][1])
+            pais.append(populacao[0][2])
 
 # ##################################################
 def reproducao(pais,taxaCrossover):
@@ -103,10 +118,8 @@ def reproducao(pais,taxaCrossover):
         filho2 = pais[indx + 1]
         probabilidadeCross = random.randint(1, 100)
         if probabilidadeCross <= taxaCrossover:
-            genCrossover = random.randint(0, 4)
-            filhosCross = str(crossover(filho1, filho2, genCrossover)).split(';')  # Crossover
-            filho1 = filhosCross[0]
-            filho2 = filhosCross[1]
+            genCrossover = random.randint(1, 4)
+            filho1,filho2 = crossover(filho1, filho2, genCrossover)  # Crossover
         filhos.append(filho1)
         filhos.append(filho2)
         indx = indx + 2
@@ -141,10 +154,11 @@ def eliminaIndividuosDuplicados(populacao):
     bkp = list()
     f2x = -99999
     for p in populacao:
-        if p[2] != f2x:
+        if p[3] != f2x:
             bkp.append(p)
-            f2x = p[2]
-    populacao = bkp
+            f2x = p[3]
+    if len(bkp) >= 4:
+        populacao = bkp
     populacao.sort(key=ordenaAptidao)
     return populacao
 
@@ -166,11 +180,12 @@ Probabilidade de Escolha P(i) = SOMATORIO f(i) - f(i) / SOMATORIO (SOMATORIO f(i
 
 1 bit(sinal) + 4 bits(valor 15 a -15 ) = 5 bits
 
-individuo
-  - Fenotipo
-  - Genotipo
-  - Aptidão
-  - probabilidadeSelecao
+Individuo
+  -0 Ordem
+  -1 Fenotipo
+  -2 Genotipo
+  -3 Aptidão
+  -4 probabilidadeSelecao
 '''
 populacao = list()
 pais = list()
@@ -192,9 +207,19 @@ for geracao in range(numeroDeGeracoes):
     reproducao(pais,taxaCrossover)
     mutacao(filhos,taxaMutacao)
     atualizarPopulacao(populacao,filhos)
-    # populacao = eliminaIndividuosDuplicados(populacao)
+    #populacao = eliminaIndividuosDuplicados(populacao)
 
 # listar populacao
 for individuo in populacao:
-    print('x='+str(individuo[0])+' >> f(x)='+str(individuo[2]))
+    print('ordem:'+str(individuo[0])+' | x='+str(individuo[1])+' >> f(x)='+str(individuo[3]))
 
+
+y = list()
+x = list()
+
+for i in range(len(populacao)):
+   y.append(populacao[i][3])
+   x.append(populacao[i][1])
+
+plt.plot(x,y)
+plt.show()
