@@ -238,7 +238,7 @@ x = list()
 for i in range(len(populacao)):
    y.append(populacao[i][3])
    x.append(populacao[i][1])
-plt.plot(x,y)
+plt.scatter(x,y)
 plt.show()
 
 populacao = eliminaIndividuos(populacao,16,32)

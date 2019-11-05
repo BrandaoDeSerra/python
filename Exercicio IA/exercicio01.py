@@ -215,7 +215,10 @@ for i in range(len(populacao)):
    y.append(populacao[i][3])
    x.append(populacao[i][1])
 
-plt.plot(x,y)
+
+plt.xlabel('x') #definindo nome do eixo X
+plt.ylabel('f(x)') #definindo nome do eixo Y
+plt.scatter(x,y)
 plt.show()
 
 # listar populacao
