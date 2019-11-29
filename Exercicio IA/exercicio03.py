@@ -15,7 +15,7 @@ recombinação, mutação e seleção natural.
      5.2- Mutação
    6- gerações
 
-O algoritimo cultura segue tambem a linha da computação Evolutiva. Esse tipo de Algoritimo tem 2 herança uma genetica e outra cultural
+O algoritimo cultura segue tambem a linha da computação Evolutiva. Esse tipo de Algoritimo tem 2 fatores de herança uma GENÉTICA e outra CULTURAL
 Componentes de um Algoritmo Cultural
 
 1-População
@@ -26,7 +26,9 @@ Componentes de um Algoritmo Cultural
  -3.1 Votação - função de Aceitação -> Influencia o Espaço de crença
  -3.2 Promoção - função de Influência -> Influencia um componente da população
 
-Algoritmos Genéticos:
+>>> Comparaçãoes dos algoritimos <<<
+
+#Algoritmos Genéticos:
 
 Início
   t=0                        # primeira geração
@@ -39,19 +41,19 @@ Início
   fim enquanto
 fim
 
-Algoritmo Cultural
+#Algoritmo Cultural
 Início
-  t= 0                             # primeira geração
-inicializar população P(t)         # população inicial aleatória
-Inicializar Espaço de Crença EP(t) # Iniciando Espaço de crença
-avaliar população P(t)             # calcula f(i) para cada indivíduo
-enquanto (não condição_fim) faça
-   Comunicação (P(t), EP(t));       # votação
-   Atualização EP(t);               # uso de operadores culturais
-   Comunicação (EP(t), P(t));       # promoção
-   t = t+1                          # próxima geração
-   selecionar P(t) de P(t-1)
-   altera P(t)                      # crossover e mutação
-   avaliar P(t)                     # calcula f(i) para cada indivíduo
-fim enquanto
+  t= 0                               # primeira geração
+  inicializar população P(t)         # população inicial aleatória
+  Inicializar Espaço de Crença EP(t) # Iniciando Espaço de crença
+  avaliar população P(t)             # calcula f(i) para cada indivíduo
+  enquanto (não condição_fim) faça
+    Comunicação (P(t), EP(t));       # votação
+    Atualização EP(t);               # uso de operadores culturais
+    Comunicação (EP(t), P(t));       # promoção
+    t = t+1                          # próxima geração
+    selecionar P(t) de P(t-1)
+    altera P(t)                      # crossover e mutação
+    avaliar P(t)                     # calcula f(i) para cada indivíduo
+  fim enquanto
 fim
