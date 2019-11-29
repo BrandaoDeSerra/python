@@ -22,6 +22,11 @@ Componentes de um Algoritmo Cultural
  -1.1 Função de avaliação
  -1.2 Função de Evolução
 2-Espaço de crença
+ -2.1 Operadores Culturais
+     .Generalização
+     .Especialização
+     .Fusão
+     .Fissão
 3-Protocolo de comunicação
  -3.1 Votação - função de Aceitação -> Influencia o Espaço de crença
  -3.2 Promoção - função de Influência -> Influencia um componente da população
