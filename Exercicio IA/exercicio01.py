@@ -42,15 +42,15 @@ def mutation(genotipo, idxMut):
 
 # ##################################################
 def ordenaProbabilidadeSelecao(val):
-    return val[4]
+    return int(val[4])
 
 # ##################################################
 def ordenaAptidao(val):
-    return val[3]
+    return int(val[3])
 
 # ##################################################
 def ordenaPopulacao(val):
-    return val[0]
+    return int(val[0])
 
 # ##################################################
 def gerarIndividuo(fenotipo,populacao):
@@ -214,7 +214,6 @@ x = list()
 for i in range(len(populacao)):
    y.append(populacao[i][3])
    x.append(populacao[i][1])
-
 
 plt.xlabel('x') #definindo nome do eixo X
 plt.ylabel('f(x)') #definindo nome do eixo Y

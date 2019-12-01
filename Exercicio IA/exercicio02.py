@@ -104,15 +104,15 @@ def avaliarPopulacao(populacao):
 
 # ##################################################
 def ordenaProbabilidadeSelecao(val):
-    return val[4]
+    return int(val[4])
 
 # ##################################################
 def ordenaAptidao(val):
-    return val[3]
+    return int(val[3])
 
 # ##################################################
 def ordenaPopulacao(val):
-    return val[0]
+    return int(val[0])
 
 # ##################################################
 def ordenaFenotipo(val):
@@ -218,6 +218,7 @@ populacao = list()
 pais = list()
 filhos = list()
 
+# parametros
 taxaCrossover = 60
 taxaMutacao = 1
 numeroDeGeracoes = 15
