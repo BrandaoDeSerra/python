@@ -55,7 +55,7 @@ numeroDeDimensoes = 2  # Número de dimensões x e y
 valorMinimo = -2  # Minimo valor para x e y
 valorMaximo = +2  # Máximo valor para x e y
 
-qtdIteracoes = 1000  # Número de Iterações
+qtdIteracoes = 800  # Número de Iterações
 
 w = 0.9  # Inércia  w (inicial) = 0,9 e diminui para w (final) = 0,2
 
@@ -75,9 +75,9 @@ for particula in enxame:
         melhor_global_posicao = list(particula.posicao)
 
 for ciclo in range(qtdIteracoes):
-    # Inércia -> fator de desagregação / dispersão 
-    if w > 0.2 and ciclo % 10 == 0 and ciclo != 0:
-        w = w - 0.3
+    # Inércia -> fator de desagregação / dispersão
+    if w > 0.2 and ciclo % 100 == 0 and ciclo != 0:
+        w = w - 0.1
     for particula in enxame:
         # Calculando a nova velocidade de cada partícula
         for v in range(numeroDeDimensoes):
@@ -87,7 +87,7 @@ for ciclo in range(qtdIteracoes):
             elif particula.velocidade[v] > valorMaximo:
                 particula.velocidade[v] = valorMaximo
 
-        # verificando a nova posição usando a nova Velocidade, limitado pelos valores maximos e minimos definidos
+        # Verificando a nova posição usando a nova Velocidade, limitado pelos valores maximos e minimos definidos
         for i in range(numeroDeDimensoes):
             particula.posicao[i] = particula.posicao[i] + particula.velocidade[i]
             if particula.posicao[i] < valorMinimo:
@@ -103,7 +103,7 @@ for ciclo in range(qtdIteracoes):
             particula.melhor_local = particula.fitness
             particula.melhor_local_posicao = list(particula.posicao)
 
-        # avaliando o melhor Global
+        # Avaliando o melhor Global
         if particula.fitness < melhor_global:
             melhor_global = particula.fitness
             melhor_global_posicao = list(particula.posicao)
