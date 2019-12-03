@@ -14,7 +14,6 @@ C2 É UM PESO PARA O MAIOR GLOBAL
 
 R1 -> radomico de 0.0 a 1.0
 R2 -> radomico de 0.0 a 1.0
-
 '''
 import random
 
@@ -76,7 +75,7 @@ for particula in enxame:
         melhor_global_posicao = list(particula.posicao)
 
 for ciclo in range(qtdIteracoes):
-    # fator de desagregação / dispersão
+    # Inércia -> fator de desagregação / dispersão 
     if w > 0.2 and ciclo % 10 == 0 and ciclo != 0:
         w = w - 0.3
     for particula in enxame:
