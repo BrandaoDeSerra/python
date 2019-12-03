@@ -5,7 +5,7 @@ from builtins import print
 # ##################################################
 def probabilidade(aptidao, soma):
     resultado = round((aptidao / soma) * 100)
-    if (resultado == 0):
+    if resultado == 0:
         resultado = 1
     return resultado
 
@@ -17,7 +17,7 @@ def fitness(x):
 def converterFenotipo2Genotipo(fenotipo):
     binario = bin(fenotipo)
     sinal = '1'
-    if (binario[0:1] == '-'):
+    if binario[0:1] == '-':
         sinal = '0'
         binario = binario[1:]
     return sinal + str(binario[2:].zfill(4))
@@ -25,7 +25,7 @@ def converterFenotipo2Genotipo(fenotipo):
 # ##################################################
 def converterGenotipo2Fenotipo(genotipo):
     sinal = '0b'
-    if (genotipo[0:1] == '0'):
+    if genotipo[0:1] == '0':
         sinal = '-0b'
     return int(sinal + genotipo[1:], 2)
 
@@ -36,7 +36,7 @@ def crossover(genotipo1, genotipo2, idxCross):
 # ##################################################
 def mutation(genotipo, idxMut):
     gene = '0'
-    if (genotipo[idxMut] == '0'):
+    if genotipo[idxMut] == '0':
         gene = '1'
     return str(genotipo[:idxMut]) + str(gene) + str(genotipo[idxMut + 1:])
 
