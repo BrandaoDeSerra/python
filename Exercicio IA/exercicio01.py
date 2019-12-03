@@ -187,6 +187,9 @@ Individuo
   -3 Aptidão
   -4 probabilidadeSelecao
 '''
+# ----------------------
+# >>>>>>> INICIO <<<<<<<
+
 populacao = list()
 pais = list()
 filhos = list()

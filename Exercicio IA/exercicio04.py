@@ -1,15 +1,13 @@
 '''
-w = inicio 0.9 vai descendo ate 0,1
+w = inicio 0.9 vai descendo ate 0,2
 C1 É UM PESO PARA O MELHOR LOCAL
 C2 É UM PESO PARA O MAIOR GLOBAL
 
-R1
+R1 - radomico
+R2 - radomico
 
 v1 = w * v1 + c1 * r1 (p1 - s1) +
 v1 = 0.9 * 3
-
-
-
 
 Usando alguma biblioteca ou implementando diretamente em alguma linguagem de programação,
 desenvolva uma solução para minimizar a função de Rosenbrock (em anexo). Faça testes pra
@@ -20,157 +18,100 @@ Xmax / Ymax = +2
 
 minGlobal = +1
 '''
-#!/usr/bin/env python
-
-################################################################################
-# File name: pso.py                                                            #
-# Description: A module that solves a minimization problem using PSO           #
-#------------------------------------------------------------------------------#
-# Author: Hussein S. Al-Olimat                                                 #
-# Email: hussein@knoesis.org                                                   #
-#------------------------------------------------------------------------------#
-# Date-last-modified: Nov 7, 2016                                              #
-# Python-version: 2.7                                                          #
-################################################################################
-# This file is part of hussein.space: Hussein S. Al-Olimat's weblog -          #
-# Blogging about computer science things I've done or intesetred in            #
-#------------------------------------------------------------------------------#
-# This code is licensed under a Creative Commons Attribution 4.0 International #
-# License. The full license terms and conditions can be found over:            #
-# https://creativecommons.org/licenses/by/4.0/                                 #
-################################################################################
-
-
 import random
 import sys
 
-################################################################################
-
-# the x and y in our function (x - y + 7) (aka. dimensions)
-number_of_variables = 2
-# the minimum possible value x or y can take
-min_value = -2
-# the maximum possible value x or y can take
-max_value = 2
-# the number of particles in the swarm
-number_of_particles = 10
-# number of times the algorithm moves each particle in the problem space
-number_of_iterations = 2000
-
-w = 0.729    # inertia
-c1 = 1.49 # cognitive (particle)
-c2 = 1.49 # social (swarm)
-
-################################################################################
-
-class Particle:
-
-    # this is only done one time when we create each particle
-    # value of positions, velocities, fitness, best fitness, and best positions
-    # is going to be updated later in the code during each iteration
-    def __init__(self, number_of_variables, min_value, max_value):
-
-        # init x and y values
-        self.positions = [0.0 for v in range(number_of_variables)]
-        # init velocities of x and y
-        self.velocities = [0.0 for v in range(number_of_variables)]
-
-        for v in range(number_of_variables):
-            # update x and y positions
-            self.positions[v] = ((max_value - min_value) * random.random()
-                                + min_value)
-            # update x and y velocities
-            self.velocities[v] = ((max_value - min_value) * random.random()
-                                + min_value)
-
-        # current fitness after updating the x and y values
-        self.fitness = Fitness(self.positions)
-        # the current particle positions as the best fitness found yet
-        self.best_particle_positions = list(self.positions)
-        # the current particle fitness as the best fitness found yet
-        self.best_particle_fitness = self.fitness
-
-#Rosenbrock
-def Fitness(positions):
+# ##################################################
+def fitness(particle):  # Rosenbrock
     x = particle[0]
     y = particle[1]
     a = 1. - x
     b = y - x * x
     return (b * b * 100.) + (a * a)
 
-# calculate a new velocity for one variable
-def calculate_new_velocity_value(particle, v):
-
-    # generate random numbers
+# ##################################################
+def calculaNovaVelocidade(particula, v):  # Calculo da velocidade por particula
     r1 = random.random()
     r2 = random.random()
+    part_1 = (w * particula.velocities[v])
+    part_2 = (c1 * r1 * (particula.melhor_particula_positions[v] - particula.positions[v]))
+    part_3 = (c2 * r2 * (melhor_enxame_posicao[v] - particula.posicao[v]))
+    novaVelocidade = part_1 + part_2 + part_3
+    return novaVelocidade
 
-    # the learning rate part
-    part_1 = (w * particle.velocities[v])
-    # the cognitive part - learning from itself
-    part_2 = (c1 * r1 * (particle.best_particle_positions[v] - particle.positions[v]))
-    # the social part - learning from others
-    part_3 = (c2 * r2 * (best_swarm_positions[v] - particle.positions[v]))
+# ##################################################
+class Particle:
+    def __init__(self, qtdVariaveis, min_value, max_value):
+        self.posicao = [0.0 for v in range(qtdVariaveis)]  # Iniciando array das posicoes
+        self.velocities = [0.0 for v in range(qtdVariaveis)]  # Iniciando array das velocidades
+        for v in range(qtdVariaveis):
+            self.posicao[v] = ((valorMaximo - valorMinimo) * random.random() + valorMinimo)  # Atualizando as posições iniciais
+            self.velocities[v] = ((valorMaximo - valorMinimo) * random.random() + valorMinimo)  # Atualizando as velocidades iniciais
+        self.fitness = fitness(self.posicao)  # Calculando do fitness de cada posição das partículas
+        self.melhor_particula_posicao = list(self.posicao)  # posição da particula
+        self.melhor_particula_local = self.fitness # melhor fitness da particula
 
-    new_velocity = part_1 + part_2 + part_3
+# ----------------------
+# >>>>>>> INICIO <<<<<<<
 
-    return new_velocity
+qtdParticulasIniciais = 5  # Número de Partículas Iniciais
 
-################################################################################
+numeroDeDimensoes = 2  # Número de dimensões
+valorMinimo = -2  # Minimo valor para x e y
+valorMaximo = +2  # Máximo valor para x e y
 
-# create the swarm
-swarm = [Particle(number_of_variables, min_value, max_value)
-                    for __x in range(number_of_particles)]
+qtdIteracoes = 10  # Número de Iterações
 
-######################################### best particle error and positions ####
+w = 0.9  # Inércia  w (inicial) = 0,9 e diminui para w (final) = 0,2
 
-best_swarm_positions = [0.0 for v in range(number_of_variables)]
-best_swarm_fitness = sys.float_info.max
+c1 = 1.49  # peso para o melhor Local
+c2 = 1.50  # peso para o melhor global
 
-for particle in swarm: # check each particle
-    if particle.fitness < best_swarm_fitness:
-        best_swarm_fitness = particle.fitness
-        best_swarm_positions = list(particle.positions)
+# Criando Enxame inicial
+enxame = [Particle(numeroDeDimensoes, valorMinimo, valorMaximo) for p in range(qtdParticulasIniciais)]
 
-################################################################################
+melhor_enxame_posicao = [0.0 for v in range(numeroDeDimensoes)]
+melhor_enxame_global = sys.float_info.max
 
-for __x in range(number_of_iterations):
-    for particle in swarm:
-        # start moving/updating particles to calculate new fitness
+# Analisando cada particula para atualizar o melor fitness Global, que é a minimização da função de Rosenbrick(fitness)
+for particula in enxame:
+    if particula.fitness < melhor_enxame_global:
+        melhor_enxame_global = particula.fitness
+        melhor_enxame_posicao = list(particula.posicao)
 
-        # compute new velocities for each particle
-        for v in range(number_of_variables):
+for i in range(qtdIteracoes):
+    for particula in enxame:
+        # Calculando a nova velocidade de cada partícula
+        for v in range(numeroDeDimensoes):
+            particula.velocities[v] = calculaNovaVelocidade(particula, v)
+            if particula.velocities[v] < valorMinimo:
+                particula.velocities[v] = valorMinimo
+            elif particula.velocities[v] > valorMaximo:
+                particula.velocities[v] = valorMaximo
 
-            particle.velocities[v] = calculate_new_velocity_value(particle, v)
+        # verificando a nova posição usando a nova Velocidade, limitado pelos valores maximos e minimos definidos
+        for v in range(numeroDeDimensoes):
+            particula.posicao[v] += particula.velocities[v]
+            if particula.posicao[v] < valorMinimo:
+                particula.posicao[v] = valorMinimo
+            elif particula.posicao[v] > valorMaximo:
+                particula.posicao[v] = valorMaximo
 
-            if particle.velocities[v] < min_value:
-                particle.velocities[v] = min_value
-            elif particle.velocities[v] > max_value:
-                particle.velocities[v] = max_value
+        # Avaliando o fitness da nova posição
+        particula.fitness = fitness(particula.posicao)
 
-        # compute new positions using the new velocities
-        for v in range(number_of_variables):
-            particle.positions[v] += particle.velocities[v]
+        # Avaliando o melhor Local
+        if particula.fitness < particula.melhor_particula_local:
+            particula.melhor_particula_local = particula.fitness
+            particula.melhor_particula_posicao = list(particula.posicao)
 
-            if particle.positions[v] < min_value:
-                particle.positions[v] = min_value
-            elif particle.positions[v] > max_value:
-                particle.positions[v] = max_value
+        # avaliando o melhor Global
+        if particula.fitness < melhor_enxame_global:
+            melhor_enxame_global = particula.fitness
+            melhor_enxame_posicao = list(particula.posicao)
 
-        # compute the fitness of the new positions
-        particle.fitness = Fitness(particle.positions)
+        # fator de desagregação / dispersão
+        if w > 0.2:
+            w = w - 0.1
 
-        # are the new positions a new best for the particle?
-        if particle.fitness < particle.best_particle_fitness:
-            particle.best_particle_fitness = particle.fitness
-            particle.best_particle_positions = list(particle.positions)
-
-        # are the new positions a new best overall?
-        if particle.fitness < best_swarm_fitness:
-            best_swarm_fitness = particle.fitness
-            best_swarm_positions = list(particle.positions)
-
-
-################################################################################
-
-print(best_swarm_positions)
+print(melhor_enxame_posicao)

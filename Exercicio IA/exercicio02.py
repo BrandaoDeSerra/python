@@ -213,6 +213,9 @@ Individuo
   -4 probabilidadeSelecao
   
 '''
+# ----------------------
+# >>>>>>> INICIO <<<<<<<
+
 cidades = [1,2,3,4]
 populacao = list()
 pais = list()
