@@ -111,3 +111,4 @@ for ciclo in range(qtdIteracoes):
 print(melhor_global_posicao)
 print(melhor_global)
 
+#https://pyswarms.readthedocs.io/en/latest/examples/tutorials/visualization.html#Plotting-in-2-D-space
