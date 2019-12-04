@@ -1,5 +1,17 @@
+'''
+Resolver o problema do caixeiro viajante (representado pela imagem em anexo), sendo que a solução consiste em encontrar um caminho sem repetições com custo mínimo.
+Execute o algoritmo com 3 variações de parâmetros e plote o gráfico de evolução da aptidão. Interprete os resultados.
+Obs: Nesse problema, é preciso primeiro definir como representar um cromossomo e como definir uma função de aptidão.
+
+Individuo
+  -0 Ordem
+  -1 Fenotipo
+  -2 Genotipo
+  -3 Aptidão
+  -4 probabilidadeSelecao
+
+'''
 import matplotlib.pyplot as plt
-import itertools
 import random
 
 # ##################################################
@@ -199,20 +211,6 @@ def eliminaIndividuos(populacao,repetidos,populacaoMinimaParaExcluir):
             ind = ind - 1
     return populacao
 
-'''
-
-2) Resolver o problema do caixeiro viajante (representado pela imagem em anexo), sendo que a solução consiste em encontrar um caminho sem repetições com custo mínimo.
-Execute o algoritmo com 3 variações de parâmetros e plote o gráfico de evolução da aptidão. Interprete os resultados.
-Obs: Nesse problema, é preciso primeiro definir como representar um cromossomo e como definir uma função de aptidão.
-
-Individuo
-  -0 Ordem
-  -1 Fenotipo
-  -2 Genotipo
-  -3 Aptidão
-  -4 probabilidadeSelecao
-  
-'''
 # ----------------------
 # >>>>>>> INICIO <<<<<<<
 

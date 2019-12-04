@@ -1,11 +1,12 @@
-'''Selecione um algoritmo evolucionário que não estudamos em sala e explique seu funcionamento, elencando os seus elementos
-(representação de indivíduos, operadores, geração etc.) e acentuando as diferenças e semelhanças em relação aos algoritmos genéticos.
 '''
+Selecione um algoritmo evolucionário que não estudamos em sala e explique seu funcionamento, elencando os seus elementos
+(representação de indivíduos, operadores, geração etc.) e acentuando as diferenças e semelhanças em relação aos algoritmos genéticos.
 
-Os algorítimos evolucionário, seguem uma linha inspirada em mecanismos da evolução orgânica, observando a natureza, para resolver problemas de otimização e busca.
+Os algorítimos evolucionários, seguem uma linha inspirada em mecanismos da evolução orgânica, observando a natureza, para resolver problemas de otimização e busca.
 Em aula estudamos um algorito genético e como todo os algoritimos dessa natureza tem como inspiração caracteristicas da biologia evolutiva, são elas a hereditariedade,
 recombinação, mutação e seleção natural.
-  Principais componentes de algoritimo genetico
+
+Principais componentes de algoritimo genético
    1- função fitness (função objetivo)
    2- indivíduo
      2.1- população
@@ -15,7 +16,7 @@ recombinação, mutação e seleção natural.
      5.2- Mutação
    6- gerações
 
-O algoritimo cultura segue tambem a linha da computação Evolutiva. Esse tipo de Algoritimo tem 2 fatores de herança uma GENÉTICA e outra CULTURAL
+O algoritimo de cultura segue também a linha da computação Evolutiva. Esse tipo de Algoritimo tem 2 fatores de herança uma GENÉTICA e outra CULTURAL
 Componentes de um Algoritmo Cultural
 
 1-População
@@ -28,13 +29,12 @@ Componentes de um Algoritmo Cultural
      .Fusão
      .Fissão
 3-Protocolo de comunicação
- -3.1 Votação - função de Aceitação -> Influencia o Espaço de crença
+ -3.1 Votação - função de Aceitação -> Influencia o Espaço de Crença
  -3.2 Promoção - função de Influência -> Influencia um componente da população
 
 >>> Comparaçãoes dos algoritimos <<<
 
 #Algoritmos Genéticos:
-
 Início
   t=0                        # primeira geração
   inicializar população P(t) # população inicial aleatória
@@ -62,3 +62,5 @@ Início
     avaliar P(t)                     # calcula f(i) para cada indivíduo
   fim enquanto
 fim
+
+'''

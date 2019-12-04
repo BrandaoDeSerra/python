@@ -1,3 +1,29 @@
+
+'''
+1) Encontrar valor de x para o qual a função f(x) = x2 - 3x + 4 assume o valor mínimo
+- Assumir que x ∈ [-10, +10]
+- Codificar X como vetor binário
+- Criar uma população inicial com 4 indivíduos
+- Aplicar Mutação com taxa de 1%
+- Aplicar Crossover com taxa de 60%
+- Usar seleção por roleta.
+- Usar no máximo 5 gerações.
+
+x -> [-10, +10]
+Populacao Inicial = 4
+Taxa de Crossover = 60%
+Taxa de Mutação = 1%
+Probabilidade de Escolha P(i) = SOMATORIO f(i) - f(i) / SOMATORIO (SOMATORIO f(i) - f(i) ))
+
+1 bit(sinal) + 4 bits(valor 15 a -15 ) = 5 bits
+
+Individuo
+  -0 Ordem
+  -1 Fenotipo
+  -2 Genotipo
+  -3 Aptidão
+  -4 probabilidadeSelecao
+'''
 import matplotlib.pyplot as plt
 import random
 from builtins import print
@@ -162,31 +188,6 @@ def eliminaIndividuosDuplicados(populacao):
     populacao.sort(key=ordenaAptidao)
     return populacao
 
-'''
-1) Encontrar valor de x para o qual a função f(x) = x2 - 3x + 4 assume o valor mínimo
-- Assumir que x ∈ [-10, +10]
-- Codificar X como vetor binário
-- Criar uma população inicial com 4 indivíduos
-- Aplicar Mutação com taxa de 1%
-- Aplicar Crossover com taxa de 60%
-- Usar seleção por roleta.
-- Usar no máximo 5 gerações.
-
-x -> [-10, +10]
-Populacao Inicial = 4
-Taxa de Crossover = 60% 
-Taxa de Mutação = 1%  
-Probabilidade de Escolha P(i) = SOMATORIO f(i) - f(i) / SOMATORIO (SOMATORIO f(i) - f(i) ))
-
-1 bit(sinal) + 4 bits(valor 15 a -15 ) = 5 bits
-
-Individuo
-  -0 Ordem
-  -1 Fenotipo
-  -2 Genotipo
-  -3 Aptidão
-  -4 probabilidadeSelecao
-'''
 # ----------------------
 # >>>>>>> INICIO <<<<<<<
 
