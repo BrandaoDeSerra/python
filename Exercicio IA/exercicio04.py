@@ -17,9 +17,6 @@ R2 -> radomico de 0.0 a 1.0
 '''
 import random
 import time
-from time import sleep
-
-import numpy as np
 import matplotlib.pyplot as plt
 
 # ##################################################
@@ -86,7 +83,7 @@ for particula in enxame:
         melhor_global_posicao = list(particula.posicao)
 
 fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1, axisbg="2.0")
+ax = fig.add_subplot(1, 1, 1)
 plt.title('Evolução PSO')
 init_plot()
 
@@ -96,9 +93,10 @@ for ciclo in range(qtdIteracoes):
         x = particula.posicao[0]
         y = particula.posicao[1]
         ax.scatter(x, y, alpha=0.8, c='black', edgecolors='none', s=30)
+    #time.sleep(2)
 
     # Inércia -> fator de desagregação / dispersão
-    if w > 0.2 and ciclo % 100 == 0 and ciclo != 0:
+    if w > 0.2 and ciclo % 50 == 0 and ciclo != 0:
         w = w - 0.1
 
     for particula in enxame:
