@@ -246,4 +246,4 @@ plt.show()
 populacao = eliminaIndividuos(populacao,16,32)
 # listar populacao
 for individuo in populacao:
-    print('ordem:'+str(individuo[0])+' | x='+str(individuo[1])+' >> f(x)='+str(individuo[3]))
+    print('x='+str(individuo[1])+' >> f(x)='+str(individuo[3]))
