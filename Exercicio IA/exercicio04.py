@@ -49,10 +49,19 @@ class Particula:
         self.melhor_local = self.fitness  # melhor fitness da particula
 
 # ##################################################
-def init_plot():
+def plot(enxame):
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    plt.title('Evolução PSO')
+    ax.clear()
     ax.scatter(2, 2, alpha=0.8, c='red', edgecolors='none', s=1)
     ax.scatter(-2, -2, alpha=0.8, c='red', edgecolors='none', s=1)
     ax.scatter(1, 1, alpha=0.8, c='red', edgecolors='none', s=30)
+    for particula in enxame:
+        x = particula.posicao[0]
+        y = particula.posicao[1]
+        ax.scatter(x, y, alpha=0.8, c='black', edgecolors='none', s=30)
+    plt.show()
 
 # ----------------------
 # >>>>>>> INICIO <<<<<<<
@@ -82,18 +91,10 @@ for particula in enxame:
         melhor_global = particula.fitness
         melhor_global_posicao = list(particula.posicao)
 
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
-plt.title('Evolução PSO')
-init_plot()
+# plotando população incial
+plot(enxame)
 
 for ciclo in range(qtdIteracoes):
-
-    for particula in enxame:
-        x = particula.posicao[0]
-        y = particula.posicao[1]
-        ax.scatter(x, y, alpha=0.8, c='black', edgecolors='none', s=30)
-    #time.sleep(2)
 
     # Inércia -> fator de desagregação / dispersão
     if w > 0.2 and ciclo % 50 == 0 and ciclo != 0:
@@ -129,9 +130,10 @@ for ciclo in range(qtdIteracoes):
             melhor_global = particula.fitness
             melhor_global_posicao = list(particula.posicao)
 
-        ax.clear()
-        init_plot()
+# Plotando resultado final
+plot(enxame)
 
+# printando melhor Global
 print(melhor_global_posicao)
 print(melhor_global)
 
