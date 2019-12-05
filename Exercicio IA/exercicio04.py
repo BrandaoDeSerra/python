@@ -16,8 +16,8 @@ R1 -> radomico de 0.0 a 1.0
 R2 -> radomico de 0.0 a 1.0
 '''
 import random
-import time
 import matplotlib.pyplot as plt
+
 
 # ##################################################
 def fitness(particula):  # Rosenbrock
@@ -27,14 +27,16 @@ def fitness(particula):  # Rosenbrock
     b = y - x * x
     return (b * b * 100.0) + (a * a)
 
+
 # ##################################################
 def calculaNovaVelocidade(particula, v):  # Calculo da velocidade por particula
-    r1 = random.random() # faixa de 0.0 a 1.0
-    r2 = random.random() # faixa de 0.0 a 1.0
+    r1 = random.random()  # faixa de 0.0 a 1.0
+    r2 = random.random()  # faixa de 0.0 a 1.0
     part_1 = (w * particula.velocidade[v])
     part_2 = (c1 * r1 * (particula.melhor_local_posicao[v] - particula.posicao[v]))
     part_3 = (c2 * r2 * (melhor_global_posicao[v] - particula.posicao[v]))
     return part_1 + part_2 + part_3
+
 
 # ##################################################
 class Particula:
@@ -48,6 +50,7 @@ class Particula:
         self.melhor_local_posicao = list(self.posicao)  # posição da particula
         self.melhor_local = self.fitness  # melhor fitness da particula
 
+
 # ##################################################
 def plot(enxame):
     fig = plt.figure()
@@ -57,11 +60,12 @@ def plot(enxame):
     ax.scatter(2, 2, alpha=0.8, c='red', edgecolors='none', s=1)
     ax.scatter(-2, -2, alpha=0.8, c='red', edgecolors='none', s=1)
     ax.scatter(1, 1, alpha=0.8, c='red', edgecolors='none', s=30)
-    for particula in enxame:
-        x = particula.posicao[0]
-        y = particula.posicao[1]
+    for p in enxame:
+        x = p.posicao[0]
+        y = p.posicao[1]
         ax.scatter(x, y, alpha=0.8, c='black', edgecolors='none', s=30)
     plt.show()
+
 
 # ----------------------
 # >>>>>>> INICIO <<<<<<<
@@ -130,11 +134,7 @@ for ciclo in range(qtdIteracoes):
             melhor_global = particula.fitness
             melhor_global_posicao = list(particula.posicao)
 
-# Plotando resultado final
+# Plotando população final e Printando Gbest
 plot(enxame)
-
-# printando melhor Global
 print(melhor_global_posicao)
 print(melhor_global)
-
-#https://pyswarms.readthedocs.io/en/latest/examples/tutorials/visualization.html#Plotting-in-2-D-space
