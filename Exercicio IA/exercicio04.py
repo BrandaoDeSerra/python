@@ -16,6 +16,11 @@ R1 -> radomico de 0.0 a 1.0
 R2 -> radomico de 0.0 a 1.0
 '''
 import random
+import time
+from time import sleep
+
+import numpy as np
+import matplotlib.pyplot as plt
 
 # ##################################################
 def fitness(particula):  # Rosenbrock
@@ -46,6 +51,12 @@ class Particula:
         self.melhor_local_posicao = list(self.posicao)  # posição da particula
         self.melhor_local = self.fitness  # melhor fitness da particula
 
+# ##################################################
+def init_plot():
+    ax.scatter(2, 2, alpha=0.8, c='red', edgecolors='none', s=1)
+    ax.scatter(-2, -2, alpha=0.8, c='red', edgecolors='none', s=1)
+    ax.scatter(1, 1, alpha=0.8, c='red', edgecolors='none', s=30)
+
 # ----------------------
 # >>>>>>> INICIO <<<<<<<
 
@@ -74,10 +85,22 @@ for particula in enxame:
         melhor_global = particula.fitness
         melhor_global_posicao = list(particula.posicao)
 
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, axisbg="2.0")
+plt.title('Evolução PSO')
+init_plot()
+
 for ciclo in range(qtdIteracoes):
+
+    for particula in enxame:
+        x = particula.posicao[0]
+        y = particula.posicao[1]
+        ax.scatter(x, y, alpha=0.8, c='black', edgecolors='none', s=30)
+
     # Inércia -> fator de desagregação / dispersão
     if w > 0.2 and ciclo % 100 == 0 and ciclo != 0:
         w = w - 0.1
+
     for particula in enxame:
         # Calculando a nova velocidade de cada partícula
         for v in range(numeroDeDimensoes):
@@ -107,6 +130,9 @@ for ciclo in range(qtdIteracoes):
         if particula.fitness < melhor_global:
             melhor_global = particula.fitness
             melhor_global_posicao = list(particula.posicao)
+
+        ax.clear()
+        init_plot()
 
 print(melhor_global_posicao)
 print(melhor_global)
