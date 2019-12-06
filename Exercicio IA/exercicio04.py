@@ -76,7 +76,7 @@ numeroDeDimensoes = 2  # Número de dimensões x e y
 valorMinimo = -2  # Minimo valor para x e y
 valorMaximo = +2  # Máximo valor para x e y
 
-qtdIteracoes = 700  # Número de Iterações
+qtdIteracoes = 600  # Número de Iterações
 
 w = 0.9  # Inércia  w (inicial) = 0,9 e diminui para w (final) = 0,2
 
@@ -134,9 +134,9 @@ for ciclo in range(qtdIteracoes):
             melhor_global = particula.fitness
             melhor_global_posicao = list(particula.posicao)
 
-        # Plotando grafico parcial
-        if ciclo % 100 == 0 and ciclo != 0:
-            plot(enxame)
+    # Plotando grafico parcial
+    if ciclo % 100 == 0 and ciclo != 0:
+        plot(enxame)
 
 # Plotando população final e Printando Gbest
 plot(enxame)
