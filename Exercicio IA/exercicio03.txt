@@ -1,4 +1,3 @@
-'''
 Selecione um algoritmo evolucionário que não estudamos em sala e explique seu funcionamento, elencando os seus elementos
 (representação de indivíduos, operadores, geração etc.) e acentuando as diferenças e semelhanças em relação aos algoritmos genéticos.
 
@@ -62,5 +61,3 @@ Início
     avaliar P(t)                     # calcula f(i) para cada indivíduo
   fim enquanto
 fim
-
-'''
