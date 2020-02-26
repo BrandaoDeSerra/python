@@ -1,6 +1,6 @@
 #KNN K vizinhos mais próximos - usados para classificação e regressão
 # -> usa a distancia enclidiana d = raiz[ (x2-x1)² + (y2 -y1)² + (ref2 - ref1)² ]
-# -> Definição do K , o ideial que seja impar 3,5,7,9,...
+# -> Definição do K , o ideal que seja impar 3,5,7,9,...
 
 from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
