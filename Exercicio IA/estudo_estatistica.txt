@@ -1,0 +1,19 @@
+﻿"Ciência de Dados"
+
+#Estatistica(Interpretação / escolhas / Avaliação) _
+  - Descritiva                                      |
+  - Probabilistica                                  |_  "Observação" e "Experimento" 
+  - Inferência                                      | 
+                                                   _| 
+  
+  *Observação - Não afeta os dados(não tem relação de causa efeito)
+  
+  *Experimento - Interferência nos dados
+  
+#Variáveis
+  -Quantitativa > numérica
+  -Qualitativa  > Categórica
+ 
+#Amostra 
+
+#Medidas de "Centralidade" e "Variabilidade"
