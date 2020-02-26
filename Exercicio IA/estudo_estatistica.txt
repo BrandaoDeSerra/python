@@ -1,19 +1,55 @@
 ﻿"Ciência de Dados"
 
-#Estatistica(Interpretação / escolhas / Avaliação) _
-  - Descritiva                                      |
-  - Probabilistica                                  |_  "Observação" e "Experimento" 
-  - Inferência                                      | 
+#Estatistica( 'Interpretação' / 'escolhas' / 'Avaliação') _
+  - Descritiva(Organizar dados)                     |
+  - Probabilistica(Analisar)                        |_  "Observação" e "Experimento" 
+  - Inferência(Respostas)                           | 
                                                    _| 
   
   *Observação - Não afeta os dados(não tem relação de causa efeito)
-  
-  *Experimento - Interferência nos dados
+  *Experimento - Interferência nos dados(Relação causa efeito)
   
 #Variáveis
-  -Quantitativa > numérica
-  -Qualitativa  > Categórica
+  -Quantitativa > numérica (Contínuas valores reais / Discreta numero fixo ou intervalo)
+  -Qualitativa  > Categórica (Nomenais e Ordinais)
  
-#Amostra 
-
+#Amostra - 'Parte de uma População' *enviesada - margem de erro
+  > Aleatória Simples
+    - Com reposição - Volta para população podendo ser selecionado novamente
+	- Sem reposição - não tem chances de ser selecionado novamente
+  > Estratificada
+    - Elementos separados por status / classificação
+  > Sistemática
+    -intervalo sistêmico 
+  
 #Medidas de "Centralidade" e "Variabilidade"
+
+ * Centralidade
+   - Média >  a soma dividido pelo total
+   - Mediana > valor do meio ou a média dos valores do meio
+   - Moda > o que mais ocorre, poce ter mais de uma
+   
+ * Variabilidade
+   - Variância > Regularidade dos dados em relacção a média
+   - Desvio padrão > distancia que os valores estão da media
+   - Amplitude > Diferença entre o maior e menor valor da amostra
+   - Quartis  > Separa em percentual de varição 
+   
+#Probabilidade > 0 a 1
+  - Experimento - O que está sendo estudado.
+  - Espaço amostral - Todas as posibilidades.
+  - Evento - o que aconteceu.
+     * Eventos Excludentes 
+	 * Eventos Não Excludentes
+     * Eventos Dependentes
+     * Eventos independentes 	 
+
+#Distribuições	 
+  - Usado na Teoria da probabilidade
+  - Comportamento de dados Aleatório
+  
+#Distribuição Binomial
+  - Numero fixo de eventos
+  - Cada expermento tem que ter 2 resultados sucesso ou fracasso
+  - probabilidade igual para cada experimento
+  - Experimento independente  

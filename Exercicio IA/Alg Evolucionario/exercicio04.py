@@ -18,7 +18,6 @@ R2 -> radomico de 0.0 a 1.0
 import random
 import matplotlib.pyplot as plt
 
-
 # ##################################################
 def fitness(particula):  # Rosenbrock
     x = particula[0]
