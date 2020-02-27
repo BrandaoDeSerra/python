@@ -6,14 +6,16 @@ from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 import seaborn as sb
 import numpy as np
+import matplotlib.pyplot as plt
 
 df = pd.read_csv('./arquivos/iris.csv')
 
 sb.pairplot(df, hue='target')
+plt.show()
 
 X = np.array(df.drop('target',1))
-y = np.array(df.target)
-
+Y = np.array(df.target)
 knn = KNeighborsClassifier(n_neighbors=3)
-knn.fit(X,y)
-print(knn.predict([[6.5,6.5,4.7,1.3]]))
+knn.fit(X,Y)
+
+print(' Resultado : ',knn.predict([[6.5,6.5,4.7,1.3]]))

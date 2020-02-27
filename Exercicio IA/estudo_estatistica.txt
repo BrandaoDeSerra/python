@@ -48,8 +48,29 @@
   - Usado na Teoria da probabilidade
   - Comportamento de dados Aleatório
   
-#Distribuição Binomial
-  - Numero fixo de eventos
-  - Cada expermento tem que ter 2 resultados sucesso ou fracasso
-  - probabilidade igual para cada experimento
-  - Experimento independente  
+  *Distribuição Binomial
+  *Distribuição normal
+  
+#Estatística Paramétrica
+#Estatística Não-Paramétrica   
+  
+#Intervalo de confiança ( 'AMOSTRA' ) 
+   - Para a média
+   - Para a Proporção
+
+#Teste de Hipótese 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -4,7 +4,7 @@ import cv2
 cap = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier('arquivos/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('arquivos/haarcascade_eye.xml')
-smile_cascade = cv2.CascadeClassifier('arquivos/haarcascade_smile.xml')
+#smile_cascade = cv2.CascadeClassifier('arquivos/haarcascade_smile.xml')
 
 while(True):
 	_, frame = cap.read()
