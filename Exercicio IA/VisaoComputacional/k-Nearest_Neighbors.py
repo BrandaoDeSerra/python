@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv('./arquivos/iris.csv')
 
-sb.pairplot(df, hue='target')
-plt.show()
-
 X = np.array(df.drop('target',1))
 Y = np.array(df.target)
-knn = KNeighborsClassifier(n_neighbors=3)
+knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(X,Y)
 
 print(' Resultado : ',knn.predict([[6.5,6.5,4.7,1.3]]))
+
+sb.pairplot(df, hue='target')
+plt.show()
