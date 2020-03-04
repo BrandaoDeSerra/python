@@ -63,11 +63,12 @@
   .Alfa
   .Valor-p
 ------------------------------------
-Correlação e Regrassão Linear \ multiplas \  
+Correlação e Regrassão Linear Simples e multipla
+             Regressão Logística Simples e multipla
   
   *Correlação(direção e força entre as variáveis) entre 1 e -1
   *
-  
+  EDA - Analise Exploratorio de dados
   
   
   
