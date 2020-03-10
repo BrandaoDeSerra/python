@@ -4,7 +4,6 @@ import cv2
 cap = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier('arquivos/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('arquivos/haarcascade_eye.xml')
-#smile_cascade = cv2.CascadeClassifier('arquivos/haarcascade_smile.xml')
 
 while(True):
 	_, frame = cap.read()
@@ -18,14 +17,8 @@ while(True):
 		for (ex,ey,ew,eh) in eyes:
 			cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
 
-		#smile = smile_cascade.detectMultiScale(gray, 1.3, 5)
-		#for (sx,sy,sw,sh) in smile:
-			#cv2.rectangle(roi_color,(sx,sy),(sx+sw,sy+sh),(0,255,255),2)
-
 	cv2.imshow('frame',frame)
-
 	key = cv2.waitKey(1)
-
 	if key == 27:
 		break
 
