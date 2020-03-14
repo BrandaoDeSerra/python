@@ -15,7 +15,7 @@ for y in range(coluna):
     for x in range(linha):
         base[img_gray[y, x]] = base[img_gray[y, x]] + 1
 
-plt.bar(list(range(256)),base)
+plt.bar(list(range(256)), base )
 plt.ylabel('Count')
 plt.xlabel('Cor')
 plt.title('Histogram count gray scale')
