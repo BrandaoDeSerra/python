@@ -48,8 +48,34 @@
   - Usado na Teoria da probabilidade
   - Comportamento de dados Aleatório
   
-#Distribuição Binomial
-  - Numero fixo de eventos
-  - Cada expermento tem que ter 2 resultados sucesso ou fracasso
-  - probabilidade igual para cada experimento
-  - Experimento independente  
+  *Distribuição Binomial
+  *Distribuição Normal
+  *T de Student (Amostra pequena)
+  
+#Estatística Paramétrica
+#Estatística Não-Paramétrica   
+  
+#Intervalo de confiança ( 'AMOSTRA' ) 
+   - Para a média
+   - Para a Proporção
+
+#Teste de Hipótese 
+  .Alfa
+  .Valor-p
+------------------------------------
+Correlação e Regrassão Linear Simples e multipla
+             Regressão Logística Simples e multipla
+  
+  *Correlação(direção e força entre as variáveis) entre 1 e -1
+  *
+  EDA - Analise Exploratorio de dados
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
