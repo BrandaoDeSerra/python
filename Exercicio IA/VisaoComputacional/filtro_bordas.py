@@ -7,20 +7,18 @@ def correlacao(img, img_corr, mascara):
     # Percorre cada pixel da imagem
     for coluna in range(img.shape[0]):
         for linha in range(img.shape[1]):
+            m = 0
             try:
-                # primeira coluna
-                m = img[coluna - 1][linha + 1] * mascara[0][0]
-                m += img[coluna - 1][linha] * mascara[1][0]
-                m += img[coluna - 1][linha - 1] * mascara[2][0]
-
-                # Segunda coluna
+                m += img[coluna - 1][linha + 1] * mascara[0][0]
                 m += img[coluna][linha + 1] * mascara[0][1]
-                m += img[coluna][linha] * mascara[1][1]
-                m += img[coluna][linha - 1] * mascara[2][1]
-
-                # Terceira coluna
                 m += img[coluna + 1][linha + 1] * mascara[0][2]
+
+                m += img[coluna - 1][linha] * mascara[1][0]
+                m += img[coluna][linha] * mascara[1][1]
                 m += img[coluna + 1][linha] * mascara[1][2]
+
+                m += img[coluna - 1][linha - 1] * mascara[2][0]
+                m += img[coluna][linha - 1] * mascara[2][1]
                 m += img[coluna + 1][linha - 1] * mascara[2][2]
 
                 # Faz a média dos valores e guarda como intensidade do pixel
