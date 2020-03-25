@@ -7,6 +7,7 @@ import pandas as pd
 import seaborn as sb
 import numpy as np
 import matplotlib.pyplot as plt
+from tkinter import messagebox
 
 df = pd.read_csv('./arquivos/iris.csv')
 
@@ -15,7 +16,7 @@ Y = np.array(df.target)
 knn = KNeighborsClassifier(n_neighbors=5)
 knn.fit(X,Y)
 
-print(' Resultado : ',knn.predict([[6.5,6.5,4.7,1.3]]))
+messagebox.showinfo('Resultado','Predict : '+ knn.predict([[6.5,6.5,4.7,1.3]]))
 
 sb.pairplot(df, hue='target')
 plt.show()

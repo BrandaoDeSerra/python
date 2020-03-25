@@ -1,5 +1,3 @@
-from itertools import product
-
 import numpy as np
 import cv2
 from tkinter import messagebox
@@ -10,7 +8,7 @@ def filtrarImagem(img, mascara):
     # Tem que ser uma mascara quadrada e ímpar
     if (mascara.shape[0] != mascara.shape[1]) or (aresta_n % 2 == 0):
         messagebox.showinfo('Alerta','Máscara tem que ser quadrada e ímpar !')
-        return
+        return 'none'
     img_corr = img.copy()
     media_col_linha_mascara = aresta_n * aresta_n
     # Percorre cada pixel da imagem
@@ -40,12 +38,13 @@ imagem = cv2.imread('./arquivos/goat.jpeg')
 filtro_mascara = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
 
 # Executa a função de correlação, imagem e mascara como parametros! ##################
-img_corr_comum = filtrarImagem(imagem, filtro_mascara)
+img_com_filtro = filtrarImagem(imagem, filtro_mascara)
 
-if img_corr_comum != '':
+if img_com_filtro != 'none':
     # Mostrar imagem
     cv2.imshow('Original', imagem)
-    cv2.imshow('Filtro', img_corr_comum)
+    cv2.imshow('Filtro', img_com_filtro)
+
     # Funções para funcionamento correto ao mostrar a imagem numa janela
     cv2.waitKey(0)
     cv2.destroyAllWindows()

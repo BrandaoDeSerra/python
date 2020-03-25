@@ -7,6 +7,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+x = int(3 / 2)
+x = int(5 / 2)
+x = int(7 / 2)
+x = int(9 / 2)
+
 # dados de cada estado
 SP = (0.9 * np.random.rand(20), 0.9 * np.random.rand(20))
 MG = (0.2 * np.random.rand(20), 0.2 * np.random.rand(20))
