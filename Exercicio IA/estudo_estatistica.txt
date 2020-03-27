@@ -44,17 +44,27 @@
      * Eventos Dependentes
      * Eventos independentes 	 
 
-#Distribuições	 
+#Distribuições de probabilidade - uso na inferência
+                                - quando existe um padrão
   - Usado na Teoria da probabilidade
   - Comportamento de dados Aleatório
   
-  *Distribuição Binomial
-  *Distribuição Normal
+  *Distribuição Binomial - Número fixo de experimento
+                         - Cada experimento so pode ter 2 resultados (true ou false)
+                         - A propabilidade de sucesso por evento tem que ser a mesma
+                         - Os exeperimentos são independentes, não pode influenciar no proximo evento
+  *Distribuição Normal - a Média e o Desvio padrão é conhecido
+                       - um histograma, mostra se os dados estão normalmente distribuidos
   *T de Student (Amostra pequena)
-  
+  *Distribuição de poisson - mede a probabilidade de ocorrencia em um
+                             intervalo de tempo, em vez de um certo
+                             numero de experimento
+  *Distribuição qui-quadrado -
+  *Distribuição Anova - Análise de variância
+
 #Estatística Paramétrica
 #Estatística Não-Paramétrica   
-  
+
 #Intervalo de confiança ( 'AMOSTRA' ) 
    - Para a média
    - Para a Proporção
@@ -67,10 +77,65 @@ Correlação e Regrassão Linear Simples e multipla
              Regressão Logística Simples e multipla
   
   *Correlação(direção e força entre as variáveis) entre 1 e -1
-  *
-  EDA - Analise Exploratorio de dados
-  
-  
+
+*EDA* - Analise Exploratorio de dados -*-*-*-*-*-*-*-*-*-*-*-
+  -Buscar informações ocultas sobre os seus dados:
+     *Variação dos dados
+     *Anomalias
+     *Distibuição dos dados
+     *Tendências
+     *Padrões
+     *Relações
+  -Produção de Graficos ajuda a mostrar a analise
+
+#Séries Temporais
+  - Comportamento de uma variável contínua em um intervalo de tempo
+  - Coleta é feita de forma regular
+  - Intervalo sempre o mesmo - dia, hora , min ...
+
+  * explicação
+  * previsão
+  * controle
+  ** Não busca relação causa efeito
+
+  Tipos
+   -> Estacionárias :
+   -> Não Estacionárias :
+   -> Estocástica : Formula + fator aleatório
+   -> Determinística : formula / função
+
+  Componentes
+   -> Tendência
+   -> Sazonalidade
+   -> Aleatoriedade
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
   
   
