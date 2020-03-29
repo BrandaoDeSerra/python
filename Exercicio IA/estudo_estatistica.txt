@@ -109,13 +109,32 @@ Correlação e Regrassão Linear Simples e multipla
    -> Sazonalidade
    -> Aleatoriedade
 
+#Machine Learning (Contínuo e mensurável)
 
+  *modelo de aprendizado
+    - Arvore de decisão
+    - Regras
+    - Naive Bayes
+    - Redes Bayesianas
+    - Redes Neurais
+    - Maquina de vetor de suporte
+    - Métodos de grupos
+    - apredizado baseado em instancias
 
+  *Estrutura
+    -Atributos ou dimensões (Colunas)
+      -classe (Atributo alvo, o que queremos prever) geralmente é o ultimo
+    -Instâncias (linhas)
+    -Relação, conjunto de todos os dados(Tabela )
+  *Tipos e dados
+    -Nominais
+    -Numéricos
 
-
-
-
-
+  **Tarefas
+    -Classificação
+    -Regressão
+    -Agrupamento
+    -Regras de Associação
 
 
 
