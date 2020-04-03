@@ -131,16 +131,24 @@ Correlação e Regrassão Linear Simples e multipla
     -Numéricos
 
   **Tarefas
-    -Classificação
-    -Regressão
-    -Agrupamento
-    -Regras de Associação
+    -Classificação -
+    -Regressão -
+    -Agrupamento -
+    -Regras de Associação -
 
+# Metricas de Erros
+  -Matriz de confusão
+  -Mean Erro ME - Média da diferença entre o realizado e o previsto
+  -Mean Absolute Erros MAE
+  -Root Mean Squared Error
+  -Mean percentege Error
 
-
-
-
-
+#deep Learning
+   - perceptron
+     - Atributos
+     - Pesos
+     - Bias
+     - Função de ativação
 
 
 
