@@ -150,6 +150,19 @@ Correlação e Regrassão Linear Simples e multipla
      - Bias
      - Função de ativação
 
+#grafos
+ -São pontos que podem ou não estar conectados, exemplos:
+   - analise relações
+   - achatar rotas
+   - tráfego de rede
+   - combate a terrorismo
+   - disseminação de doenças - probaboilidade de contágio
+   - analise de redes e midias sociais
+   - acompanhar concorrentes
+ - elementos
+    - vertices -vertices o nodes
+    - arestas  -edges ou links
+
 
 https://www.worldometers.info/coronavirus/
 
