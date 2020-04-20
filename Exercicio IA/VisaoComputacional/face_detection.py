@@ -2,7 +2,8 @@
 import numpy as np
 import cv2
 import os
-
+from keras.models import model_from_json
+from keras.preprocessing import image
 
 # FUNCTIONS
 
@@ -80,11 +81,17 @@ savefaceC = 0
 trained = False
 persons = []
 
+#load model
+model = model_from_json(open("data/fer.json", "r").read())
+#load weights
+model.load_weights('data/fer.h5')
+
 # READ VIDEO
 cap = cv2.VideoCapture(0)
 
 # LOAD HAAR CASCADE CLASSIFIER
 face_cascade = cv2.CascadeClassifier('arquivos/haarcascade_frontalface_default.xml')
+emotions = ('Irritado', 'Desgosto', 'Medo', 'Feliz', 'Triste', 'Surpreso', 'Neutro')
 
 # LOAD RECOGNIZER pip install opencv_contrib_python
 recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -109,8 +116,8 @@ while (True):
         # FACE CROP
         roi_gray = gray[y:y + h, x:x + w]
 
-        # RESIZE FACE CROP TOq 50x50
-        resize = cv2.resize(roi_gray, (50, 50))
+        # RESIZE FACE CROP TOq 48x48
+        resize = cv2.resize(roi_gray, (48, 48))
 
         # CHECK IF RECOGNIZER IS TRAINED
         if trained:
@@ -131,6 +138,20 @@ while (True):
 
             # DRAW TEXT IF IS TRAINED OR NOT
             cv2.putText(frame, 'TRAINED', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+
+            img_pixels = image.img_to_array(resize)
+            img_pixels = np.expand_dims(img_pixels, axis=0)
+            img_pixels /= 255
+
+            predictions = model.predict(img_pixels)
+            # find max indexed array
+            max_index = np.argmax(predictions[0])
+
+            predicted_emotion = emotions[max_index]
+
+            cv2.putText(frame, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+
         else:
             cv2.putText(frame, 'NOT TRAINED', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
