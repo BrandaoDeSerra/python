@@ -1,9 +1,14 @@
 import time
 import tkinter
-
+from PIL import Image
+import pytesseract
 import PIL.Image
 import PIL.ImageTk
 import cv2
+import requests
+from flask import json
+from base64 import b64encode
+from json import dumps
 
 
 class App:
@@ -12,7 +17,7 @@ class App:
         self.window.title(window_title)
         self.pwidth = 640  # 320
         self.pheight = 480  # 240
-
+        faceCrop = ""
         # FullScreenApp(self.window)
 
         # open video source (by default this will try to open the computer webcam)
@@ -32,7 +37,6 @@ class App:
         # self.btn_snapshot = tkinter.Button(window, text="Photo", width=50, command=self.snapshot)
         # self.btn_snapshot.pack(anchor=tkinter.CENTER, expand=True)
 
-        # After it is called once, the update method will be automatically called every delay milliseconds
         self.delay = 10
         self.update()
 
@@ -104,16 +108,16 @@ class MyVideoCapture:
 
                     # Indentificação da Pessoa #################################################
                     idf, confidence = recognizer.predict(resize)
-                    nameP = label_faces[idf - 1].rstrip('\n')
+                    nameP = "Desconhecido"
 
-                    cv2.rectangle(frame, (x, y - 22), (x + len(nameP), y), (0, 255, 0), -1)
                     if confidence > 150:
+                        nameP = label_faces[idf - 1].rstrip('\n')
 
-                        cv2.putText(frame, nameP, (int(x), int(y) - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1,
-                                    cv2.LINE_AA)
-                    else:
-                        cv2.putText(frame, "Desconhecido...", (int(x), int(y) - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                                    (0, 0, 0), 1, cv2.LINE_AA)
+                    cv2.rectangle(frame, (x, y - 22), (x + w, y), (0, 255, 0), -1)
+                    cv2.putText(frame, nameP, (int(x), int(y) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1,
+                                cv2.LINE_AA)
+
+                    self.vid.sendFace(self, resize, idf)
 
                 return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             else:
@@ -124,14 +128,32 @@ class MyVideoCapture:
     def get_frame1(self, pwidth, pheight):
         if self.vid1.isOpened():
             ret1, frame1 = self.vid1.read()
+            x = 35
+            y = 5
+            w = 45
+            h = 20
+            cropTermal = frame1[y:y + h, x:x + w]
+            cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
+            try:
+                custom_config = r'--oem 3 --psm 6'
+                termalText = pytesseract.image_to_string(cropTermal, config=custom_config)
+            except:
+                termalText = "undefine"
+
             dim = (pwidth, pheight)
             # resize image
             frame1 = cv2.resize(frame1, dim, interpolation=cv2.INTER_AREA)
             if ret1:
                 for faces in position_faces:
                     x, y, w, h = faces.split(",")
-                    cv2.rectangle(frame1, (int(x) + 10, int(y) - 30),
-                                  (int(x) + 10 + int(w) + 40, int(y) - 30 + int(h) + 40), (255, 255, 255), 2)
+                    xt = int(x) + 10
+                    yt = int(y) - 20
+                    wt = int(w) + 45
+                    ht = int(h) + 45
+                    cv2.rectangle(frame1, (xt, yt), (xt + wt, yt + ht), (255, 255, 255), 2)
+                    cv2.rectangle(frame1, (xt, yt - 22), (xt + wt, yt), (255, 255, 255), -1)
+                    cv2.putText(frame1, termalText, (xt, yt - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1,
+                                cv2.LINE_AA)
                 position_faces.clear()
                 # Return a boolean success flag and the current frame converted to BGR
                 return ret1, cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
@@ -140,7 +162,25 @@ class MyVideoCapture:
         else:
             return None, None
 
-    # Release the video source when the object is destroyed
+    def sendFace(self, faceCrop, pId):
+        base64_string = b64encode(faceCrop).decode('utf-8')
+        data = {'id': pId, 'tp': termalText, 'im': base64_string}
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        try:
+            response = requests.post(url+"/api/enviarVisita",
+                                     data=json.dumps(data),
+                                     headers=headers,
+                                     timeout=5)
+
+            # If the response was successful, no Exception will be raised
+            response.raise_for_status()
+        except requests.HTTPError as http_err:
+            print(f'HTTP error occurred: {http_err}')
+        except Exception as err:
+            print(f'Other error occurred: {err}')
+
+            # Release the video source when the object is destroyed
+
     def __del__(self):
         if self.vid.isOpened():
             self.vid.release()
@@ -165,13 +205,17 @@ class FullScreenApp(object):
 
 
 global face_cascade
+global termalText
 global recognizer
 global label_faces
 global position_faces
+global url
+url = "http://localhost:8080"
 face_cascade = cv2.CascadeClassifier('resource/haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("resource/model_face_recognition.xml")
 text_file = open("resource/label_face_recognition.txt", "r")
 label_faces = text_file.readlines()
 position_faces = []
+termalText = ""
 App(tkinter.Tk(), "Recognition MV")

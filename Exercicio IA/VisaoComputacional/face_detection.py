@@ -1,11 +1,15 @@
 import numpy as np
 import cv2
 import os
-
+from gtts import gTTS
+from datetime import datetime
+from pygame import mixer  # Load the popular external library
 from keras.models import Model, Sequential
 from keras.layers import Input, Convolution2D, ZeroPadding2D, MaxPooling2D, Flatten, Dense, Dropout, Activation
 from keras.preprocessing import image
 from keras.models import model_from_json
+import time
+
 
 def creatDir(name, path='/home/brandao/PycharmProjects/python/Exercicio IA/VisaoComputacional'):
     # CHECK IF FOLDER EXISTS
@@ -49,6 +53,10 @@ def trainData():
             faces.append(img)
             ids.append(i)
     recognizer.train(faces, np.array(ids))
+    with open("data/label_face_recognition.txt", "w") as txt_file:
+        for line in persons:
+            txt_file.write(line + "\n")
+    recognizer.save("data/model_face_recognition.xml")
 
 
 def loadVggFaceModel():
@@ -130,6 +138,31 @@ def genderModel():
     return gender_model_out
 
 
+def text_to_speech(pNome, pGenero):
+    saudacao = "um bom dia!"
+    tratamento = "senhor "
+    data_e_hora_atual = datetime.now()
+    hora24HH = data_e_hora_atual.strftime('%H')
+    if 12 <= int(hora24HH) < 18:
+        saudacao = "uma boa tarde! "
+    elif 18 <= int(hora24HH) < 24:
+        saudacao = "uma boa noite! "
+
+    if pGenero == "Feminino":
+        tratamento = "senhora "
+
+    audio = "Bem-vindo " + tratamento + pNome + "! A MV deseja a você " + saudacao
+    tts = gTTS(audio, lang='pt-br', slow=False, lang_check=False)
+    # Salva o arquivo de audio
+    tts.save('audio.mp3')
+    # Da play ao audio
+    mixer.init()
+    mixer.music.load('audio.mp3')
+    mixer.music.play()
+    os.remove("audio.mp3")
+    time.sleep(3)
+
+
 # Nome
 nome = ''
 
@@ -159,6 +192,9 @@ predicted_age = "0"
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 
+winName = 'main'
+# cv2.namedWindow(winName, cv2.WINDOW_NORMAL)
+# cv2.setWindowProperty(winName, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 cap = cv2.VideoCapture(0)
 _, frame = cap.read()
 
@@ -196,7 +232,7 @@ while True:
                 idf, confidence = recognizer.predict(resize)
                 nameP = persons[idf - 1]
 
-                cv2.putText(frame, 'Treinado', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+                cv2.putText(frame, 'Treinado', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
             else:
                 cv2.putText(frame, 'Nao treinado', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
@@ -216,7 +252,8 @@ while True:
                     margin = 30
                     margin_x = int((w * margin) / 100)
                     margin_y = int((h * margin) / 100)
-                    detected_face = frame[int(y - margin_y):int(y + h + margin_y), int(x - margin_x):int(x + w + margin_x)]
+                    detected_face = frame[int(y - margin_y):int(y + h + margin_y),
+                                    int(x - margin_x):int(x + w + margin_x)]
                     detected_face = cv2.resize(detected_face, (224, 224))
                     frame_pixels = image.img_to_array(detected_face)
                     frame_pixels = np.expand_dims(frame_pixels, axis=0)
@@ -235,16 +272,22 @@ while True:
                             gen = gender[1]
                         else:
                             gen = gender[0]
+
+                    # falando o nome e saudação
+                    text_to_speech(nameP, gen)
+
                 except:
                     None
 
-            cv2.putText(frame, nameP, (int(x), int(y) - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(frame, nameP, (int(x), int(y) - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
+                        cv2.LINE_AA)
             if 1 == activate:
                 label = predicted_emotion + " / " + str(gen) + " / " + str(predicted_age) + " anos."
-                cv2.putText(frame, label, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+                cv2.putText(frame, label, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
             if saveface:
-                cv2.putText(frame, str(savefaceC), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1, cv2.LINE_AA)
+                cv2.putText(frame, str(savefaceC), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
+                            cv2.LINE_AA)
                 savefaceC += 1
                 saveImg(resize)
 
@@ -252,11 +295,12 @@ while True:
                 savefaceC = 0
                 saveface = False
 
-        cv2.putText(frame, 'Pressione espaco para salvar', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
+        cv2.putText(frame, 'Pressione espaco para salvar', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
+                    cv2.LINE_AA)
 
-        cv2.imshow('Video', frame)
+        cv2.imshow(winName, frame)
 
-    key = cv2.waitKey(15)
+    key = cv2.waitKey(10)
 
     # Digite T , comando para treinar
     if key == 116:
