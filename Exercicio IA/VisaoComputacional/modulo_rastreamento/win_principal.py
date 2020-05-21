@@ -8,17 +8,18 @@ import cv2
 import requests
 from flask import json
 from base64 import b64encode
-from json import dumps
+import configparser
+from pygame import mixer
 
 
 class App:
-    def __init__(self, window, window_title):
+    def __init__(self, window, window_title, width, height):
         self.window = window
         self.window.title(window_title)
-        self.pwidth = 640  # 320
-        self.pheight = 480  # 240
+        self.pwidth = width  # 320
+        self.pheight = height  # 240
         faceCrop = ""
-        # FullScreenApp(self.window)
+        #FullScreenApp(self.window)
 
         # open video source (by default this will try to open the computer webcam)
         self.vid = MyVideoCapture(0)
@@ -28,33 +29,20 @@ class App:
 
         # Create a canvas that can fit the above video source size
         self.canvas = tkinter.Canvas(window, width=self.pwidth, height=self.pheight)
-        self.canvas.pack(side="right", fill="both", expand=True)
+        self.canvas.pack(side="top", fill="both", expand=True)
 
         self.canvas1 = tkinter.Canvas(window, width=self.pwidth, height=self.pheight)
-        self.canvas1.pack(side="left", fill="both", expand=True)
-
-        # Button that lets the user take a snapshot
-        # self.btn_snapshot = tkinter.Button(window, text="Photo", width=50, command=self.snapshot)
-        # self.btn_snapshot.pack(anchor=tkinter.CENTER, expand=True)
+        self.canvas1.pack(side="bottom", fill="both", expand=True)
 
         self.delay = 10
         self.update()
 
         self.window.mainloop()
 
-    def snapshot(self):
-        # Get a frame from the video source
-        ret, frame = self.vid.get_frame()
-        ret1, frame1 = self.vid1.get_frame1()
-        if ret:
-            cv2.imwrite("frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-            cv2.imwrite("frame1-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg",
-                        cv2.cvtColor(frame1, cv2.COLOR_RGB2BGR))
-
     def update(self):
         # Get a frame from the video source
         ret, frame = self.vid.get_frame(self.pwidth, self.pheight)
-        ret1, frame1 = self.vid1.get_frame1(self.pwidth, self.pheight)
+        ret1, frame1 = self.vid1.get_frame_termal(self.pwidth, self.pheight)
         if ret:
             self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
             self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
@@ -65,20 +53,21 @@ class App:
 
 
 class MyVideoCapture:
-    def __init__(self, video_source=1):
+    def __init__(self, video_source):
         # Open the video source
         if video_source == 0:
-            self.vid = cv2.VideoCapture(video_source)
+            self.vid = cv2.VideoCapture(idInputWebcam)
             if not self.vid.isOpened():
-                raise ValueError("Unable to open video source", video_source)
+                raise ValueError("Unable to open video source", idInputWebcam)
         else:
-            self.vid1 = cv2.VideoCapture(video_source)
+            self.vid1 = cv2.VideoCapture(idInputTermal)
             if not self.vid1.isOpened():
-                raise ValueError("Unable to open video source", video_source)
+                raise ValueError("Unable to open video source", idInputTermal)
 
     def get_frame(self, pwidth, pheight):
         if self.vid.isOpened():
             ret, frame = self.vid.read()
+            #frame = cv2.flip(frame,1)
             dim = (pwidth, pheight)
             # resize image
             frame = cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
@@ -112,12 +101,26 @@ class MyVideoCapture:
 
                     if confidence > 150:
                         nameP = label_faces[idf - 1].rstrip('\n')
+                    else:
+                        idf = "undefine"
 
                     cv2.rectangle(frame, (x, y - 22), (x + w, y), (0, 255, 0), -1)
                     cv2.putText(frame, nameP, (int(x), int(y) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1,
                                 cv2.LINE_AA)
 
-                    self.vid.sendFace(self, resize, idf)
+                    #self.vid1.get_frame_termal(self.pwidth, self.pheight)
+
+                    try:
+                        if termalText != "undefine":
+                            valor = float(termalText)
+                            if valor >= temperaturaCritica:
+                                mixer.music.play()
+                                time.sleep(2)
+                    except:
+                        termalText = "undefine"
+
+                    if idf != "undefine" and termalText != "undefine":
+                        self.vid.sendFace(self, idf, idOrigem, termalText, resize)
 
                 return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             else:
@@ -125,7 +128,7 @@ class MyVideoCapture:
         else:
             return None, None
 
-    def get_frame1(self, pwidth, pheight):
+    def get_frame_termal(self, pwidth, pheight):
         if self.vid1.isOpened():
             ret1, frame1 = self.vid1.read()
             x = 35
@@ -146,8 +149,8 @@ class MyVideoCapture:
             if ret1:
                 for faces in position_faces:
                     x, y, w, h = faces.split(",")
-                    xt = int(x) + 10
-                    yt = int(y) - 20
+                    xt = int(x) + 0 #10
+                    yt = int(y) + 80
                     wt = int(w) + 45
                     ht = int(h) + 45
                     cv2.rectangle(frame1, (xt, yt), (xt + wt, yt + ht), (255, 255, 255), 2)
@@ -162,15 +165,15 @@ class MyVideoCapture:
         else:
             return None, None
 
-    def sendFace(self, faceCrop, pId):
-        base64_string = b64encode(faceCrop).decode('utf-8')
-        data = {'id': pId, 'tp': termalText, 'im': base64_string}
+    def sendFace(self, pId, pIdOrigem, pTermalText, faceCrop):
+        base64_string_face = b64encode(faceCrop).decode('utf-8')
+        data = {'id': pId, 'ori': idOrigem, 'tp': pTermalText, 'im': base64_string_face}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         try:
-            response = requests.post(url+"/api/enviarVisita",
+            response = requests.post(pUrl,
                                      data=json.dumps(data),
                                      headers=headers,
-                                     timeout=5)
+                                     timeout=pTimeout)
 
             # If the response was successful, no Exception will be raised
             response.raise_for_status()
@@ -204,18 +207,34 @@ class FullScreenApp(object):
         self._geom = geom
 
 
+# ######## MODULO DE IDENTIFICAÇÃO ######## #
 global face_cascade
 global termalText
 global recognizer
 global label_faces
 global position_faces
-global url
-url = "http://localhost:8080"
-face_cascade = cv2.CascadeClassifier('resource/haarcascade_frontalface_default.xml')
+global pUrl
+global pTimeout
+global idOrigem
+global temperaturaCritica
+global idInputWebcam
+global idInputTermal
+
+mixer.init()
+mixer.music.load('resource/sound/beep.mp3')
+config = configparser.RawConfigParser()
+config.read('resource/config.properties')
+pUrl = config['APP_CONFIG']["urlApi"]
+pTimeout = int(config['APP_CONFIG']["urlApiTimeout"])
+idOrigem = config['APP_CONFIG']["idOrigem"]
+idInputWebcam = int(config['APP_CONFIG']["idInputWebcam"])
+idInputTermal = int(config['APP_CONFIG']["idInputTermal"])
+temperaturaCritica = float(config['APP_CONFIG']["temperaturaCrítica"])
+face_cascade = cv2.CascadeClassifier('resource/model/haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("resource/model_face_recognition.xml")
-text_file = open("resource/label_face_recognition.txt", "r")
+recognizer.read("resource/model/model_face_recognition.xml")
+text_file = open("resource/model/label_face_recognition.txt", "r")
 label_faces = text_file.readlines()
 position_faces = []
 termalText = ""
-App(tkinter.Tk(), "Recognition MV")
+App(tkinter.Tk(), "Recognition MV",int(config['APP_CONFIG']["pwidth"]),int(config['APP_CONFIG']["pheight"]))
