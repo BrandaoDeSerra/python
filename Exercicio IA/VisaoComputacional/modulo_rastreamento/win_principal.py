@@ -23,8 +23,7 @@ class App:
         self.pheight = height  # 240
         self.resetTimeout = int(0)
         self.timeRecognition = int(5)
-        faceCrop = ""
-        # FullScreenApp(self.window)
+        self.timeRecognitionMultiplo = int(5)
 
         # open video source (by default this will try to open the computer webcam)
         self.vid = MyVideoCapture(0)
@@ -47,7 +46,7 @@ class App:
     def update(self):
         # Get a frame from the video source
         if self.resetTimeout <= 0:
-            ret, frame, self.resetTimeout,self.timeRecognition = self.vid.get_frame(self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition)
+            ret, frame, self.resetTimeout,self.timeRecognition,self.timeRecognitionMultiplo = self.vid.get_frame(self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition, self.timeRecognitionMultiplo)
             ret1, frame1 = self.vid1.get_frame_termal(self.pwidth, self.pheight)
             if ret:
                 self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
@@ -56,7 +55,7 @@ class App:
                 self.photo1 = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame1))
                 self.canvas1.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
         else:
-            ret, frame, self.resetTimeout, self.timeRecognition = self.vid.get_frame_out(self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition)
+            ret, frame, self.resetTimeout, self.timeRecognition,self.timeRecognitionMultiplo = self.vid.get_frame_out(self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition, self.timeRecognitionMultiplo)
             ret1, frame1 = self.vid1.get_frame_termal(self.pwidth, self.pheight)
             if ret:
                 self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
@@ -78,19 +77,19 @@ class MyVideoCapture:
             if not self.vid1.isOpened():
                 raise ValueError("Unable to open video source", idInputTermal)
 
-    def get_frame_out(self, pwidth, pheight, resetTimeout, timeRecognition):
+    def get_frame_out(self, pwidth, pheight, resetTimeout, timeRecognition, timeRecognitionMultiplo):
         if self.vid.isOpened():
             ret, frame = self.vid.read()
             if ret:
                 frame = cv2.flip(frame, 1)
                 cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition
+                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition, timeRecognitionMultiplo
             else:
-                return ret, None, resetTimeout, timeRecognition
+                return ret, None, resetTimeout, timeRecognition, timeRecognitionMultiplo
         else:
-            return None, None, None, None
+            return None, None, None, None, None
 
-    def get_frame(self, pwidth, pheight, resetTimeout, timeRecognition):
+    def get_frame(self, pwidth, pheight, resetTimeout, timeRecognition, timeRecognitionMultiplo):
         if self.vid.isOpened():
             ret, frame = self.vid.read()
             frame = cv2.flip(frame, 1)
@@ -109,19 +108,21 @@ class MyVideoCapture:
                 ph = (py + py) + 50
 
                 # DRAW RECT IN FACE
-                cv2.rectangle(frame, (px, py), (px + pw, py + ph), (0, 255, 0), 2)
+                cv2.rectangle(frame, (px, py), (px + pw, py + ph), (0, 255, 255), 2)
                 gray = gray[py:py + ph, px:px + pw]
 
                 # DETECT FACES IN FRAME
                 faces = face_cascade.detectMultiScale(gray, 1.4, 5)
 
                 if len(faces) <= 1:
+                    timeRecognitionMultiplo = 5
                     # RUN ALL FACES IN FRAME
                     for i, (x, y, w, h) in enumerate(faces):
 
                         if timeRecognition > 0:
                             timeRecognition = timeRecognition - 1
                             continue
+
                         # FACE CROP
                         roi_gray = gray[y:y + h, x:x + w]
                         detected_face = frame[int(y):int(y + h), int(x):int(x + w)]  # crop detected face
@@ -141,8 +142,6 @@ class MyVideoCapture:
                                 idf = "undefine"
                             else:
                                 nameP = label_faces[idf - 1].rstrip('\n')
-
-                        termalText = "38.0"
                         try:
                             if termalText != "undefine":
                                 valor = float(termalText)
@@ -186,16 +185,20 @@ class MyVideoCapture:
                         except:
                             termalText = "undefine"
                 else:
-                    self.text_to_speech("Uma pessoa por vez, por favor!")
-                    time.sleep(2)
-                    resetTimeout = 5
-                    timeRecognition = 5
+                    if timeRecognition > 0:
+                        timeRecognitionMultiplo = timeRecognitionMultiplo - 1
+                    else:
+                        self.text_to_speech("Uma pessoa por vez, por favor!")
+                        time.sleep(2)
+                        resetTimeout = 5
+                        timeRecognition = 5
+                        timeRecognitionMultiplo = 5
 
-                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition
+                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition, timeRecognitionMultiplo
             else:
-                return ret, None, resetTimeout, timeRecognition
+                return ret, None, resetTimeout, timeRecognition, timeRecognitionMultiplo
         else:
-            return None, None, None, None
+            return None, None, None, None, None
 
     def get_frame_termal(self, pwidth, pheight):
         if self.vid1.isOpened():
@@ -225,6 +228,7 @@ class MyVideoCapture:
     def sendFace(self, pId, pIdOrigem, pTermalText, faceCrop):
         base64_string_face = b64encode(faceCrop).decode('utf-8')
         data = {'id': pId, 'ori': idOrigem, 'tp': pTermalText, 'im': base64_string_face}
+        print(data)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         try:
             response = requests.post(pUrl,
@@ -239,7 +243,6 @@ class MyVideoCapture:
         except Exception as err:
             print(f'Other error occurred: {err}')
 
-            # Release the video source when the object is destroyed
 
     def speech_saudacao(self, pNome):
         saudacao = "um bom dia!"
@@ -326,7 +329,7 @@ temperaturaCritica = float(config['APP_CONFIG']["temperaturaCrítica"])
 if config['APP_CONFIG']["faceRecognition"] == 'True' or config['APP_CONFIG']["faceRecognition"] == 'true':
     faceRecognition = True
 else:
-     faceRecognition = False
+    faceRecognition = False
 face_cascade = cv2.CascadeClassifier('resource/model/haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("resource/model/model_face_recognition.xml")
