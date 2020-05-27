@@ -137,6 +137,7 @@ class MyVideoCapture:
                         resize = cv2.resize(roi_gray, (48, 48))
 
                         pName = ""
+                        pIdFull = ""
                         # Indentificação da Pessoa #################################################
                         idf = "undefine"
                         if faceRecognition:
@@ -144,10 +145,13 @@ class MyVideoCapture:
                             if confidence <= 150:
                                 idf = "undefine"
                             else:
-                                nameP = label_faces[idf - 1].rstrip('\n')
+                                pIdFull = label_faces[idf - 1].rstrip('\n')
+                                nameP = pIdFull.split("_")[1]
                         try:
                             if termalText != "undefine" and termalText != "":
                                 valor = float(termalText)
+                                if valor <= 33:
+                                    continue
                                 temperaturaCritica = float(config['APP_CONFIG']["temperaturaCrítica"])
                                 if faceRecognition:
                                     if idf != "undefine":
@@ -163,7 +167,7 @@ class MyVideoCapture:
                                             self.speech_saudacao(nameP)
                                             resetTimeout = 5
                                             timeRecognition = 5
-                                        self.sendFace(idf, idOrigem, termalText, resize)
+                                        self.sendFace(pIdFull, idOrigem, termalText, resize)
                                     else:
                                         mixer.music.load('resource/sound/beep.mp3')
                                         mixer.music.play()
@@ -171,7 +175,6 @@ class MyVideoCapture:
                                         resetTimeout = 5
                                         timeRecognition = 5
                                 else:
-                                    nameP = "Temperatura aferida " + str(termalText)
                                     if valor >= temperaturaCritica:
                                         mixer.music.load('resource/sound/beep.mp3')
                                         mixer.music.play()
@@ -184,7 +187,7 @@ class MyVideoCapture:
                                         self.speech_saudacao("")
                                         resetTimeout = 5
                                         timeRecognition = 5
-                                    self.sendFace(idf, idOrigem, termalText, resize)
+                                    self.sendFace(pIdFull, idOrigem, termalText, resize)
                                 time.sleep(5)
                         except Exception as err:
                             print(f'Other error occurred: {err}')
@@ -236,7 +239,7 @@ class MyVideoCapture:
 
     def sendFace(self, pId, pIdOrigem, pTermalText, faceCrop):
         base64_string_face = b64encode(faceCrop).decode('utf-8')
-        data = {'id': pId, 'ori': idOrigem, 'tp': pTermalText, 'im': base64_string_face}
+        data = {'id': pId, 'idOrigem': idOrigem, 'tp': pTermalText, 'im': base64_string_face}
         print(data)
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         try:
