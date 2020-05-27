@@ -24,6 +24,7 @@ class App:
         self.resetTimeout = int(0)
         self.timeRecognition = int(5)
         self.timeRecognitionMultiplo = int(5)
+        self.termalText = "undefine"
 
         # open video source (by default this will try to open the computer webcam)
         self.vid = MyVideoCapture(0)
@@ -46,8 +47,10 @@ class App:
     def update(self):
         # Get a frame from the video source
         if self.resetTimeout <= 0:
-            ret, frame, self.resetTimeout,self.timeRecognition,self.timeRecognitionMultiplo = self.vid.get_frame(self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition, self.timeRecognitionMultiplo)
-            ret1, frame1 = self.vid1.get_frame_termal(self.pwidth, self.pheight)
+            ret, frame, self.resetTimeout, self.timeRecognition, self.timeRecognitionMultiplo, self.termalText = self.vid.get_frame(
+                self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition, self.timeRecognitionMultiplo,
+                self.termalText)
+            ret1, frame1, self.termalText = self.vid1.get_frame_termal(self.pwidth, self.pheight, self.termalText)
             if ret:
                 self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame))
                 self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
@@ -55,8 +58,8 @@ class App:
                 self.photo1 = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(frame1))
                 self.canvas1.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
         else:
-            ret, frame, self.resetTimeout, self.timeRecognition,self.timeRecognitionMultiplo = self.vid.get_frame_out(self.pwidth, self.pheight, self.resetTimeout, self.timeRecognition, self.timeRecognitionMultiplo)
-            ret1, frame1 = self.vid1.get_frame_termal(self.pwidth, self.pheight)
+            ret, frame = self.vid.get_frame_out()
+            ret1, frame1,self.termalText = self.vid1.get_frame_termal(self.pwidth, self.pheight, self.termalText)
             if ret:
                 self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
             if ret1:
@@ -77,19 +80,19 @@ class MyVideoCapture:
             if not self.vid1.isOpened():
                 raise ValueError("Unable to open video source", idInputTermal)
 
-    def get_frame_out(self, pwidth, pheight, resetTimeout, timeRecognition, timeRecognitionMultiplo):
+    def get_frame_out(self):
         if self.vid.isOpened():
             ret, frame = self.vid.read()
             if ret:
                 frame = cv2.flip(frame, 1)
                 cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition, timeRecognitionMultiplo
+                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             else:
-                return ret, None, resetTimeout, timeRecognition, timeRecognitionMultiplo
+                return ret, None
         else:
-            return None, None, None, None, None
+            return None, None
 
-    def get_frame(self, pwidth, pheight, resetTimeout, timeRecognition, timeRecognitionMultiplo):
+    def get_frame(self, pwidth, pheight, resetTimeout, timeRecognition, timeRecognitionMultiplo, termalText):
         if self.vid.isOpened():
             ret, frame = self.vid.read()
             frame = cv2.flip(frame, 1)
@@ -138,13 +141,14 @@ class MyVideoCapture:
                         idf = "undefine"
                         if faceRecognition:
                             idf, confidence = recognizer.predict(resize)
-                            if confidence <= 130:
+                            if confidence <= 150:
                                 idf = "undefine"
                             else:
                                 nameP = label_faces[idf - 1].rstrip('\n')
                         try:
-                            if termalText != "undefine":
+                            if termalText != "undefine" and termalText != "":
                                 valor = float(termalText)
+                                temperaturaCritica = float(config['APP_CONFIG']["temperaturaCrítica"])
                                 if faceRecognition:
                                     if idf != "undefine":
                                         if valor >= temperaturaCritica:
@@ -167,7 +171,7 @@ class MyVideoCapture:
                                         resetTimeout = 5
                                         timeRecognition = 5
                                 else:
-                                    nameP = "Temperatura aferida "+str(termalText)
+                                    nameP = "Temperatura aferida " + str(termalText)
                                     if valor >= temperaturaCritica:
                                         mixer.music.load('resource/sound/beep.mp3')
                                         mixer.music.play()
@@ -182,25 +186,28 @@ class MyVideoCapture:
                                         timeRecognition = 5
                                     self.sendFace(idf, idOrigem, termalText, resize)
                                 time.sleep(5)
-                        except:
+                        except Exception as err:
+                            print(f'Other error occurred: {err}')
                             termalText = "undefine"
+
                 else:
-                    if timeRecognition > 0:
+                    timeRecognition = 5
+                    if timeRecognitionMultiplo > 0:
                         timeRecognitionMultiplo = timeRecognitionMultiplo - 1
                     else:
                         self.text_to_speech("Uma pessoa por vez, por favor!")
                         time.sleep(2)
                         resetTimeout = 5
-                        timeRecognition = 5
                         timeRecognitionMultiplo = 5
 
-                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition, timeRecognitionMultiplo
+                return ret, cv2.cvtColor(frame,
+                                         cv2.COLOR_BGR2RGB), resetTimeout, timeRecognition, timeRecognitionMultiplo, termalText
             else:
-                return ret, None, resetTimeout, timeRecognition, timeRecognitionMultiplo
+                return ret, None, resetTimeout, timeRecognition, timeRecognitionMultiplo, termalText
         else:
-            return None, None, None, None, None
+            return None, None, None, None, None, None
 
-    def get_frame_termal(self, pwidth, pheight):
+    def get_frame_termal(self, pwidth, pheight, termalText):
         if self.vid1.isOpened():
             ret1, frame1 = self.vid1.read()
             x = 35
@@ -208,10 +215,12 @@ class MyVideoCapture:
             w = 45
             h = 20
             cropTermal = frame1[y:y + h, x:x + w]
+            cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
             try:
                 custom_config = r'--oem 3 --psm 6'
                 termalText = pytesseract.image_to_string(cropTermal, config=custom_config)
-            except:
+            except Exception as err:
+                print(f'OCR error occurred: {err}')
                 termalText = "undefine"
 
             dim = (pwidth, pheight)
@@ -219,11 +228,11 @@ class MyVideoCapture:
             frame1 = cv2.resize(frame1, dim, interpolation=cv2.INTER_AREA)
             if ret1:
                 # Return a boolean success flag and the current frame converted to BGR
-                return ret1, cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
+                return ret1, cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB), termalText
             else:
-                return ret1, None
+                return ret1, None, None
         else:
-            return None, None
+            return None, None, None
 
     def sendFace(self, pId, pIdOrigem, pTermalText, faceCrop):
         base64_string_face = b64encode(faceCrop).decode('utf-8')
@@ -239,10 +248,9 @@ class MyVideoCapture:
             # If the response was successful, no Exception will be raised
             response.raise_for_status()
         except requests.HTTPError as http_err:
-            print(f'HTTP error occurred: {http_err}')
+            print(f'HTTP error API occurred: {http_err}')
         except Exception as err:
-            print(f'Other error occurred: {err}')
-
+            print(f'API connect error occurred: {err}')
 
     def speech_saudacao(self, pNome):
         saudacao = "um bom dia!"
@@ -305,7 +313,6 @@ class FullScreenApp(object):
 
 # ######## MODULO DE IDENTIFICAÇÃO ######## #
 global face_cascade
-global termalText
 global recognizer
 global label_faces
 global pUrl
@@ -326,6 +333,7 @@ idOrigem = config['APP_CONFIG']["idOrigem"]
 idInputWebcam = int(config['APP_CONFIG']["idInputWebcam"])
 idInputTermal = int(config['APP_CONFIG']["idInputTermal"])
 temperaturaCritica = float(config['APP_CONFIG']["temperaturaCrítica"])
+
 if config['APP_CONFIG']["faceRecognition"] == 'True' or config['APP_CONFIG']["faceRecognition"] == 'true':
     faceRecognition = True
 else:
@@ -335,5 +343,4 @@ recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("resource/model/model_face_recognition.xml")
 text_file = open("resource/model/label_face_recognition.txt", "r")
 label_faces = text_file.readlines()
-termalText = ""
 App(tkinter.Tk(), "Recognition MV", int(config['APP_CONFIG']["pwidth"]), int(config['APP_CONFIG']["pheight"]))
