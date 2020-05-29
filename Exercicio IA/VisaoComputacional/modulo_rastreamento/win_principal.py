@@ -218,7 +218,8 @@ class MyVideoCapture:
             w = 45
             h = 20
             cropTermal = frame1[y:y + h, x:x + w]
-            cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
+            #cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
+
             try:
                 custom_config = r'--oem 3 --psm 6'
                 termalText = pytesseract.image_to_string(cropTermal, config=custom_config)
@@ -226,6 +227,13 @@ class MyVideoCapture:
                 print(f'OCR error occurred: {err}')
                 termalText = "undefine"
 
+            xq = 1
+            yq = 25
+            wq = 313
+            hq = 190
+            # cv2.rectangle(frame1, (xq, yq), (xq + wq, yq + hq), (0, 255, 255), 1)
+            frame1 = frame1[yq:yq + hq, xq:xq + wq]
+            frame1 = cv2.flip(frame1, 1)
             dim = (pwidth, pheight)
             # resize image
             frame1 = cv2.resize(frame1, dim, interpolation=cv2.INTER_AREA)
