@@ -12,7 +12,7 @@ import configparser
 import os
 from gtts import gTTS
 from datetime import datetime
-from pygame import mixer  # Load the popular external library
+from pygame import mixer
 
 
 class App:
@@ -136,7 +136,7 @@ class MyVideoCapture:
                         # RESIZE FACE CROP TO 48x48
                         resize = cv2.resize(roi_gray, (48, 48))
 
-                        pName = ""
+                        nameP = ""
                         pIdFull = ""
                         # Indentificação da Pessoa #################################################
                         idf = "undefine"
@@ -219,7 +219,6 @@ class MyVideoCapture:
             h = 20
             cropTermal = frame1[y:y + h, x:x + w]
             #cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
-
             try:
                 custom_config = r'--oem 3 --psm 6'
                 termalText = pytesseract.image_to_string(cropTermal, config=custom_config)
