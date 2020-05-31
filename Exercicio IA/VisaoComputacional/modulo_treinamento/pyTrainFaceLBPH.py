@@ -26,12 +26,10 @@ indexNamePersons = []
 idx = 0
 indexName = ""
 indexNameAnt = ""
-s3 = boto3.client(
-    's3',
-    aws_access_key_id=str(config['AWS']["aws_access_key_id"]),
-    aws_secret_access_key=str(config['AWS']["aws_secret_access_key"]),
-    region_name=str(config['AWS']["region"])
-)
+s3 = boto3.client('s3',
+                  aws_access_key_id=str(config['AWS']["aws_access_key_id"]),
+                  aws_secret_access_key=str(config['AWS']["aws_secret_access_key"]),
+                  region_name=str(config['AWS']["region"]))
 myBucket = str(config['AWS']["name_bucket"])
 list = s3.list_objects(Bucket=myBucket, Prefix='images/')['Contents']
 for s3_key in list:
