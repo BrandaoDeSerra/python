@@ -13,6 +13,7 @@ import os
 from gtts import gTTS
 from datetime import datetime
 from pygame import mixer
+import boto3
 
 
 class App:
@@ -59,7 +60,7 @@ class App:
                 self.canvas1.create_image(0, 0, image=self.photo1, anchor=tkinter.NW)
         else:
             ret, frame = self.vid.get_frame_out()
-            ret1, frame1,self.termalText = self.vid1.get_frame_termal(self.pwidth, self.pheight, self.termalText)
+            ret1, frame1, self.termalText = self.vid1.get_frame_termal(self.pwidth, self.pheight, self.termalText)
             if ret:
                 self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
             if ret1:
@@ -218,7 +219,7 @@ class MyVideoCapture:
             w = 45
             h = 20
             cropTermal = frame1[y:y + h, x:x + w]
-            #cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
+            # cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 0, 255), 1)
             try:
                 custom_config = r'--oem 3 --psm 6'
                 termalText = pytesseract.image_to_string(cropTermal, config=custom_config)
@@ -343,6 +344,21 @@ idOrigem = config['APP_CONFIG']["idOrigem"]
 idInputWebcam = int(config['APP_CONFIG']["idInputWebcam"])
 idInputTermal = int(config['APP_CONFIG']["idInputTermal"])
 temperaturaCritica = float(config['APP_CONFIG']["temperaturaCrítica"])
+
+s3 = boto3.client('s3',
+                  aws_access_key_id=str(config['AWS']["aws_access_key_id"]),
+                  aws_secret_access_key=str(config['AWS']["aws_secret_access_key"]),
+                  region_name=str(config['AWS']["region"]))
+myBucket = str(config['AWS']["name_bucket"])
+listPath = s3.list_objects(Bucket=myBucket, Prefix='model/')['Contents']
+for s3_key in listPath:
+    s3_object = s3_key['Key']
+    if s3_object.endswith("/"):
+        continue
+    if s3_object.find("label") > 0:
+        s3.download_file(myBucket, s3_object, "resource/model/label_face_recognition.txt")
+    else:
+        s3.download_file(myBucket, s3_object, "resource/model/model_face_recognition.xml")
 
 if config['APP_CONFIG']["faceRecognition"] == 'True' or config['APP_CONFIG']["faceRecognition"] == 'true':
     faceRecognition = True
