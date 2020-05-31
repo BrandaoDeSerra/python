@@ -31,8 +31,8 @@ s3 = boto3.client('s3',
                   aws_secret_access_key=str(config['AWS']["aws_secret_access_key"]),
                   region_name=str(config['AWS']["region"]))
 myBucket = str(config['AWS']["name_bucket"])
-list = s3.list_objects(Bucket=myBucket, Prefix='images/')['Contents']
-for s3_key in list:
+listPath = s3.list_objects(Bucket=myBucket, Prefix='images/')['Contents']
+for s3_key in listPath:
     s3_object = s3_key['Key']
     if s3_object.endswith("/"):
         continue
