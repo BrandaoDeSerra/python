@@ -15,6 +15,8 @@ def carimboTempo():
 config = configparser.RawConfigParser()
 config.read('config.properties')
 pasta_saida_treino = config['FOLDER_TRAIN']['pastaSaidaModel']
+pastaTreino = config['FOLDER_TRAIN']['pastaImagen']
+pastaEnvioModelo = config['FOLDER_TRAIN']['pastaModelo']
 
 print(carimboTempo() + " > Inicio treinamento ")
 
@@ -31,7 +33,7 @@ s3 = boto3.client('s3',
                   aws_secret_access_key=str(config['AWS']["aws_secret_access_key"]),
                   region_name=str(config['AWS']["region"]))
 myBucket = str(config['AWS']["name_bucket"])
-listPath = s3.list_objects(Bucket=myBucket, Prefix='images/')['Contents']
+listPath = s3.list_objects(Bucket=myBucket, Prefix=pastaTreino+'/')['Contents']
 for s3_key in listPath:
     s3_object = s3_key['Key']
     if s3_object.endswith("/"):
@@ -64,12 +66,12 @@ with open(pasta_saida_treino + "/" + "label_face_recognition.txt", "w") as txt_f
         txt_file.write(line + "\n")
 recognizer.save(pasta_saida_treino + "/" + "model_face_recognition.xml")
 
-binary_data_label = open('output_model/label_face_recognition.txt', 'rb')
-binary_data_model = open('output_model/model_face_recognition.xml', 'rb')
+binary_data_label = open(pasta_saida_treino+'/label_face_recognition.txt', 'rb')
+binary_data_model = open(pasta_saida_treino+'/model_face_recognition.xml', 'rb')
 
-s3.put_object(Body=binary_data_label, Bucket=myBucket, Key='model/label_face_recognition.txt',
+s3.put_object(Body=binary_data_label, Bucket=myBucket, Key=pastaEnvioModelo+'/label_face_recognition.txt',
               Metadata={'dt': str(carimboTempo())})
-s3.put_object(Body=binary_data_model, Bucket=myBucket, Key='model/model_face_recognition.xml',
+s3.put_object(Body=binary_data_model, Bucket=myBucket, Key=pastaEnvioModelo+'/model_face_recognition.xml',
               Metadata={'dt': str(carimboTempo())})
 
 print(carimboTempo() + " > Fim treinamento ")
