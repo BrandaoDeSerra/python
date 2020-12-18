@@ -93,6 +93,9 @@ Correlação e Regrassão Linear Simples e multipla
   - a Ordem é dos dados é uma premissa
   - Intervalo sempre o mesmo - dia, hora , min ...
 
+   -Série Discreta
+   -Série Contínua
+
   Porque analisar séries:
   * Explicação
   * Previsão
@@ -100,8 +103,8 @@ Correlação e Regrassão Linear Simples e multipla
   ** Não busca relação causa efeito
 
   Tipos:
-   -> Estacionárias : estão em torno de uma media
-   -> Não Estacionárias :
+   -> Estacionárias : estão em torno de uma media - ARMA
+   -> Não Estacionárias : ARIMA
    -> Estocástica : Formula + fator aleatório
    -> Determinística : formula / função
 
@@ -119,6 +122,12 @@ Correlação e Regrassão Linear Simples e multipla
 
    Autocorrelação
 
+   Erros - residuais()
+   Metricas
+     - MAE
+     - RMSE
+     - MASE
+     - MAPE
 
 #Machine Learning (Contínuo e mensurável)
 
