@@ -1,11 +1,10 @@
 ﻿"Ciência de Dados"
 
-#Estatistica( 'Interpretação' / 'escolhas' / 'Avaliação') _
-  - Descritiva(Organizar dados)                     |
-  - Probabilistica(Analisar)                        |_  "Observação" e "Experimento" 
-  - Inferência(Respostas)                           | 
-                                                   _| 
-  
+#Estatistica('Interpretação' / 'escolhas' / 'Avaliação') _
+  - Descritiva(Organizar dados)                           |
+  - Probabilistica(Analisar)                              |_ "Observação" e "Experimento"
+  - Inferência(Respostas)                                _|
+
   *Observação - Não afeta os dados(não tem relação de causa efeito)
   *Experimento - Interferência nos dados(Relação causa efeito)
   
@@ -24,21 +23,21 @@
   
 #Medidas de "Centralidade" e "Variabilidade"
 
- * Centralidade
-   - Média >  a soma dividido pelo total
-   - Mediana > valor do meio ou a média dos valores do meio
-   - Moda > o que mais ocorre, poce ter mais de uma
+ > Centralidade
+   - Média   > A soma dividido pelo total
+   - Mediana > Valor do meio ou a média dos valores do meio
+   - Moda    > O que mais ocorre, pode ter mais de uma
    
- * Variabilidade
-   - Variância > Regularidade dos dados em relacção a média
-   - Desvio padrão > distancia que os valores estão da media
-   - Amplitude > Diferença entre o maior e menor valor da amostra
-   - Quartis  > Separa em percentual de varição 
+ > Variabilidade
+   - Variância     > Regularidade dos dados em relacção a média
+   - Desvio padrão > Distancia que os valores estão da media
+   - Amplitude     > Diferença entre o maior e menor valor da amostra
+   - Quartis       > Separa em percentual de varição
    
 #Probabilidade > 0 a 1
-  - Experimento - O que está sendo estudado.
-  - Espaço amostral - Todas as posibilidades.
-  - Evento - o que aconteceu.
+  - Experimento     > O que está sendo estudado.
+  - Espaço amostral > Todas as posibilidades.
+  - Evento          > O que aconteceu.
      * Eventos Excludentes 
 	 * Eventos Não Excludentes
      * Eventos Dependentes
@@ -89,25 +88,46 @@ Correlação e Regrassão Linear Simples e multipla
   -Produção de Graficos ajuda a mostrar a analise
 
 #Séries Temporais
-  - Comportamento de uma variável contínua em um intervalo de tempo
+  - Comportamento de 'uma variável' contínua em um intervalo de tempo
   - Coleta é feita de forma regular
+  - a Ordem é dos dados é uma premissa
   - Intervalo sempre o mesmo - dia, hora , min ...
 
-  * explicação
-  * previsão
-  * controle
+   -Série Discreta
+   -Série Contínua
+
+  Porque analisar séries:
+  * Explicação
+  * Previsão
+  * Controle
   ** Não busca relação causa efeito
 
-  Tipos
-   -> Estacionárias :
-   -> Não Estacionárias :
+  Tipos:
+   -> Estacionárias : estão em torno de uma media - ARMA
+   -> Não Estacionárias : ARIMA
    -> Estocástica : Formula + fator aleatório
    -> Determinística : formula / função
 
-  Componentes
-   -> Tendência
+  Componentes: uma "medida", um "fato" e uma "unidade de tempo"
+   -> Tendência - linear ou exponencial
    -> Sazonalidade
+   -> Ciclo - aumento ou redução sem um padrão, algo não previsto
+      -> Erro - não é explicado
    -> Aleatoriedade
+   * fazer uma boa decomposição desses componentes na sua analise.
+
+   ST para ?
+     -Previsão / tendência
+     -Compreender Fenômenos
+
+   Autocorrelação
+
+   Erros - residuais()
+   Metricas
+     - MAE
+     - RMSE
+     - MASE
+     - MAPE
 
 #Machine Learning (Contínuo e mensurável)
 
@@ -152,21 +172,29 @@ Correlação e Regrassão Linear Simples e multipla
 
 #grafos
  -São pontos que podem ou não estar conectados, exemplos:
-   - analise relações
+   - conectar pessoas e analise relações
    - achatar rotas
    - tráfego de rede
    - combate a terrorismo
    - disseminação de doenças - probaboilidade de contágio
    - analise de redes e midias sociais
    - acompanhar concorrentes
- - elementos
-    - vertices -vertices o nodes
-    - arestas  -edges ou links
-
-
-https://www.worldometers.info/coronavirus/
-
-
+   - estudo de moleculas
+ -Elementos basicos de um grafo
+    - vertices -vertices o nodes -> pode conter propriedades
+    - arestas  -edges ou links (Peso : distancia ...) -> pode conter propriedades
+ -Os grafo pode ser direcionado ou não
+ -Adjacencia, verticies ligados por uma aresta
+ - *** GRAU o VERTICE - total de arrestas de um vertice
+     - Grau de Entrada
+     - Grau de Saida
+ -Laço - auto vertice liga ele mesmo
+ -Grafo conexo : todos os Vertices interligados
+ -Caminho : não repete o nó
+ -Desidade: numero de vertices, ligações
+ -Coesão : dependecia de ligações para manter as conexoes
+ -Arvore : CAmimnho unidirecional
+ -Matriz adjacente, armazenar grafos
 
 
 

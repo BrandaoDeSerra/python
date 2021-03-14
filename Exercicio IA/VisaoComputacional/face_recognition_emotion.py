@@ -24,11 +24,9 @@ for index, row in df.iterrows():
     except:
         print(f"error occured at index :{index} and row:{row}")
 
-num_features = 64
 num_labels = 7
-batch_size = 64
-epochs = 30
-width, height = 48, 48
+batch_size = 512
+epochs = 72
 
 X_train = np.array(X_train, 'float32')
 train_y = np.array(train_y, 'float32')
@@ -95,6 +93,8 @@ model.fit(X_train, train_y,
 
 # Saving the  model to  use it later on
 fer_json = model.to_json()
-with open("data/fer.json", "w") as json_file:
+with open("data/fer2013.json", "w") as json_file:
     json_file.write(fer_json)
-model.save_weights("data/fer.h5")
+model.save_weights("data/emotion_model_weights.h5")
+
+print("Modelo gerado!!!!!S")
