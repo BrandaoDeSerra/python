@@ -1,3 +1,6 @@
+# como configurar o ambiente python
+# pyhton https://www.youtube.com/watch?v=ZQ60SJDACuc ambiente 
+    
 # arrayX = [-1,-0.5,0,0.5,1]
 # for x in arrayX:
 #    y = x**2 + x + 1
