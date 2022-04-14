@@ -1,6 +1,7 @@
 # como configurar o ambiente python
 # pyhton https://www.youtube.com/watch?v=ZQ60SJDACuc ambiente
 # https://www.youtube.com/watch?v=F2Ah1x6hJek git
+# https://www.youtube.com/watch?v=m1TYpvIYm74 VENV
 
     
 # arrayX = [-1,-0.5,0,0.5,1]
