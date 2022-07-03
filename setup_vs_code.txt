@@ -1,1 +1,31 @@
-init
+**** PYTHON *****
+--------------------------------------------
+# pyhton https://www.youtube.com/watch?v=ZQ60SJDACuc ambiente
+# https://www.youtube.com/watch?v=F2Ah1x6hJek git
+# https://www.youtube.com/watch?v=m1TYpvIYm74 VENV
+youtube.com/watch?v=rAHdLNDeWt0 robo rochedo
+----------------------
+python3 -m venv venv        
+----------------------
+.\venv\Scripts\activate.ps1
+----------------------
+.vscode > settings.json
+{
+    "python.pipenvPath": "venv/Scripts/python.exe",
+    "code-runner.executorMap": {
+        "python": "venv/Scripts/python.exe",
+    },
+    "markdownlint.config": {
+        "MD028": false,
+        "MD025": {
+            "front_matter_title": ""
+        }
+    },
+    "git.ignoreLimitWarning": true,
+    "terminal.integrated.scrollback": 5000,
+}
+----------------------------
+pip freeze > requirements.txt
+----------------------------
+pip install -r requirements.txt
+----------------------------
