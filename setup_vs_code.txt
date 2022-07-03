@@ -7,7 +7,8 @@ youtube.com/watch?v=rAHdLNDeWt0 robo rochedo
 ----------------------
 python3 -m venv venv        
 ----------------------
-.\venv\Scripts\activate.ps1
+.\venv\Scripts\activate.ps1 (win)
+venv/bin/activate (linux)
 ----------------------
 .vscode > settings.json
 {
