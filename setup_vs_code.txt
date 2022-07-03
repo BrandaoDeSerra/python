@@ -11,7 +11,7 @@ python3 -m venv venv
 venv/bin/activate (linux)
 ----------------------
 .vscode > settings.json
-{
+(WIN){
     "python.pipenvPath": "venv/Scripts/python.exe",
     "code-runner.executorMap": {
         "python": "venv/Scripts/python.exe",
@@ -24,6 +24,37 @@ venv/bin/activate (linux)
     },
     "git.ignoreLimitWarning": true,
     "terminal.integrated.scrollback": 5000,
+}
+(UNIX)
+{
+    "python.pipenvPath": "venv/bin/python3",
+    "code-runner.executorMap": {
+        "python": "venv/bin/python3",
+    },
+    "markdownlint.config": {
+        "MD028": false,
+        "MD025": {
+            "front_matter_title": ""
+        }
+    },
+    "git.ignoreLimitWarning": true,
+    "terminal.integrated.scrollback": 5000,
+}
+----------------------------
+> settings.json GLOBAL
+{
+    "window.zoomLevel": 2,
+    "editor.fontSize": 20,
+    "code-runner.ignoreSelection": true,
+    "code-runner.runInTerminal": true,
+
+    "python.linting.mypyEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.testing.unittestEnabled": true,
+
+    "[python]": {
+        "editor.formatOnSave": true
+    }
 }
 ----------------------------
 pip freeze > requirements.txt
